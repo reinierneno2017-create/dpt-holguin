@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPT Holguín</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #1e5a48; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab { background: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        .tab.active { background: #1e5a48; color: white; }
+        .panel { display: none; }
+        .panel.active-panel { display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 20px; overflow: hidden; }
+        .card-header { background: #f8f9fa; padding: 15px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #e9ecef; }
+        .card-header i { font-size: 1.8rem; color: #1e5a48; }
+        .card-header h3 { font-size: 1.2rem; }
+        .card-body { padding: 20px; }
+        .route-title { background: #e8f0ed; padding: 8px 15px; border-radius: 30px; margin-bottom: 15px; text-align: center; font-weight: 600; }
+        .schedule-item { background: #fafdfa; border-left: 4px solid #2c8b6e; padding: 12px; margin-bottom: 12px; border-radius: 12px; }
+        .schedule-time { font-weight: 800; font-size: 1.2rem; color: #1a6b54; }
+        .schedule-days { background: #fff3cf; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; margin-left: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .stat-card { background: white; border-radius: 20px; padding: 25px; text-align: center; }
+        .stat-number { font-size: 3rem; font-weight: 800; }
+        .stat-card.accidentes .stat-number { color: #dc3545; }
+        .stat-card.lesionados .stat-number { color: #fd7e14; }
+        .stat-card.fallecidos .stat-number { color: #6c757d; }
+        .meeting-card { background: #f8f9fa; padding: 15px; margin-bottom: 12px; border-radius: 16px; border-left: 4px solid #1e5a48; }
+        .meeting-date { font-weight: 800; color: #1e5a48; }
+        .footer { text-align: center; margin-top: 40px; padding: 20px; background: #1a3a32; color: #b8d4c8; border-radius: 20px; }
+        .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: #1e5a48; color: white; border: none; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; z-index: 999; }
+        @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } .refresh-btn { width: 45px; height: 45px; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-bus"></i> DPT Holguín</h1>
+        <p>Dirección Provincial de Transporte - Información de salidas</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showPanel('bus')">🚌 ÓMNIBUS</button>
+        <button class="tab" onclick="showPanel('train')">🚆 TREN</button>
+        <button class="tab" onclick="showPanel('permits')">📄 PERMISOS</button>
+        <button class="tab" onclick="showPanel('flights')">✈️ AEROPUERTO</button>
+        <button class="tab" onclick="showPanel('accidents')">📊 SEGURIDAD VIAL</button>
+        <button class="tab" onclick="showPanel('meetings')">📅 REUNIONES</button>
+    </div>
+
+    <!-- Panel ÓMNIBUS -->
+    <div id="panelBus" class="panel active-panel">
+        <div class="grid">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-bus"></i><h3>Viazul</h3></div>
+                <div class="card-body">
+                    <div class="route-title">Holguín → La Habana</div>
+                    <div class="schedule-item"><div><span class="schedule-time">07:30</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div>Andén 5</div><div>Aire acondicionado</div></div>
+                    <div class="schedule-item"><div><span class="schedule-time">14:15</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div>Andén 5</div><div>Expreso</div></div>
+                    <div class="route-title">La Habana → Holguín</div>
+                    <div class="schedule-item"><div><span class="schedule-time">08:00</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div>Andén 12</div><div>Viazul Habana</div></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-bus"></i><h3>Astro</h3></div>
+                <div class="card-body">
+                    <div class="route-title">Holguín → La Habana</div>
+                    <div class="schedule-item"><div><span class="schedule-time">06:00</span><span class="schedule-days">Diario</span></div><div>Andén 8</div><div>Regular</div></div>
+                    <div class="schedule-item"><div><span class="schedule-time">12:30</span><span class="schedule-days">Diario</span></div><div>Andén 8</div><div>Expreso</div></div>
+                    <div class="schedule-item"><div><span class="schedule-time">19:45</span><span class="schedule-days">Diario</span></div><div>Andén 9</div><div>Nocturno</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel TREN -->
+    <div id="panelTrain" class="panel">
+        <div class="grid">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div>
+                <div class="card-body">
+                    <div class="route-title">Holguín → La Habana</div>
+                    <div class="schedule-item"><div><span class="schedule-time">15:20</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div>Estación Central</div><div>14 horas</div></div>
+                    <div class="route-title">La Habana → Holguín</div>
+                    <div class="schedule-item"><div><span class="schedule-time">09:30</span><span class="schedule-days">Lun, Mié, Vie</span></div><div>Estación Central</div><div>Llega al día siguiente</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel PERMISOS -->
+    <div id="panelPermits" class="panel"><div style="background:linear-gradient(135deg,#1e5a48,#0f3a2d); border-radius:20px; padding:40px; text-align:center; color:white;"><div style="font-size:4rem; font-weight:800; color:#ffd966;">47</div><div>Medios con Permiso Excepcional</div></div></div>
+
+    <!-- Panel AEROPUERTO -->
+    <div id="panelFlights" class="panel">
+        <div class="grid">
+            <div class="card"><div class="card-header"><i class="fas fa-plane"></i><h3>CU 801</h3></div><div class="card-body"><div><strong>La Habana</strong> → <strong>Holguín</strong></div><div class="schedule-time" style="font-size:1rem;">08:30</div><div><span style="background:#28a745; color:white; padding:3px 12px; border-radius:20px;">Programado</span></div></div></div>
+            <div class="card"><div class="card-header"><i class="fas fa-plane"></i><h3>CU 802</h3></div><div class="card-body"><div><strong>Holguín</strong> → <strong>La Habana</strong></div><div class="schedule-time" style="font-size:1rem;">10:15</div><div><span style="background:#28a745; color:white; padding:3px 12px; border-radius:20px;">Programado</span></div></div></div>
+            <div class="card"><div class="card-header"><i class="fas fa-plane"></i><h3>CU 803</h3></div><div class="card-body"><div><strong>Miami</strong> → <strong>Holguín</strong></div><div class="schedule-time" style="font-size:1rem;">11:45</div><div><span style="background:#28a745; color:white; padding:3px 12px; border-radius:20px;">Programado</span></div></div></div>
+            <div class="card"><div class="card-header"><i class="fas fa-plane"></i><h3>IB 323</h3></div><div class="card-body"><div><strong>Madrid</strong> → <strong>Holguín</strong></div><div class="schedule-time" style="font-size:1rem;">17:45</div><div><span style="background:#fd7e14; color:white; padding:3px 12px; border-radius:20px;">Demora</span></div><div>Aterrizaje 19:30</div></div></div>
+        </div>
+    </div>
+
+    <!-- Panel SEGURIDAD VIAL -->
+    <div id="panelAccidents" class="panel">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-chart-line"></i><h3>Comportamiento de la Accidentalidad</h3></div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card accidentes"><div class="stat-number">12</div><div>Accidentes</div></div>
+                    <div class="stat-card lesionados"><div class="stat-number">18</div><div>Lesionados</div></div>
+                    <div class="stat-card fallecidos"><div class="stat-number">3</div><div>Fallecidos</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel REUNIONES -->
+    <div id="panelMeetings" class="panel">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-calendar-alt"></i><h3>Reuniones de Última Hora</h3></div>
+            <div class="card-body">
+                <div class="meeting-card"><div class="meeting-date">28 de marzo de 2026</div><div><strong>Lugar:</strong> Terminal de Ómnibus</div><div><strong>Motivo:</strong> Revisión de horarios</div></div>
+                <div class="meeting-card"><div class="meeting-date">30 de marzo de 2026</div><div><strong>Lugar:</strong> Estación Central</div><div><strong>Motivo:</strong> Mantenimiento de vías</div></div>
+                <div class="meeting-card"><div class="meeting-date">2 de abril de 2026</div><div><strong>Lugar:</strong> Aeropuerto Frank País</div><div><strong>Motivo:</strong> Coordinación con aerolíneas</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><i class="fas fa-code"></i> Desarrollado Por Reynier Velázquez Morales - Todos los Derechos Reservados</p>
+    </div>
+</div>
+
+<button class="refresh-btn" onclick="location.reload()"><i class="fas fa-sync-alt"></i></button>
+
+<script>
+    function showPanel(panel) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
+        document.getElementById('panel' + panel.charAt(0).toUpperCase() + panel.slice(1)).classList.add('active-panel');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+</script>
+</body>
+</html>
