@@ -6,7 +6,10 @@
     <title>DPT Holguín - Dirección Provincial de Transporte</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Supabase JS - Usando Skypack CDN (más estable) -->
+    <script src="https://cdn.skypack.dev/@supabase/supabase-js@2"></script>
     <style>
+        /* ========== ESTILOS COMPLETOS (MANTENER) ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -473,96 +476,59 @@
     </div>
 
     <div class="content-container">
-        <!-- Panel ÓMNIBUS -->
-        <div id="busPanel" class="panel-modern active-panel">
-            <div class="cards-grid">
-                <div class="card-modern">
-                    <div class="card-header-modern"><i class="fas fa-bus"></i><h3>Viazul</h3></div>
-                    <div class="card-body-modern">
-                        <div class="route-badge">Holguín → La Habana</div>
-                        <div class="schedule-card"><div><span class="schedule-time">07:30</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div class="schedule-platform">Andén 5</div><div class="schedule-note">Aire acondicionado</div></div>
-                        <div class="schedule-card"><div><span class="schedule-time">14:15</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Andén 5</div><div class="schedule-note">Expreso</div></div>
-                        <div class="route-badge">La Habana → Holguín</div>
-                        <div class="schedule-card"><div><span class="schedule-time">08:00</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div class="schedule-platform">Andén 12</div><div class="schedule-note">Viazul Habana</div></div>
-                        <div class="schedule-card"><div><span class="schedule-time">15:30</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Andén 12</div><div class="schedule-note">Directo</div></div>
-                    </div>
-                </div>
-                <div class="card-modern">
-                    <div class="card-header-modern"><i class="fas fa-bus"></i><h3>Astro</h3></div>
-                    <div class="card-body-modern">
-                        <div class="route-badge">Holguín → La Habana</div>
-                        <div class="schedule-card"><div><span class="schedule-time">06:00</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 8</div><div class="schedule-note">Regular</div></div>
-                        <div class="schedule-card"><div><span class="schedule-time">12:30</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 8</div><div class="schedule-note">Expreso</div></div>
-                        <div class="schedule-card"><div><span class="schedule-time">19:45</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 9</div><div class="schedule-note">Nocturno</div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel TREN -->
-        <div id="trainPanel" class="panel-modern">
-            <div class="cards-grid">
-                <div class="card-modern">
-                    <div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div>
-                    <div class="card-body-modern">
-                        <div class="route-badge">Holguín → La Habana</div>
-                        <div class="schedule-card"><div><span class="schedule-time">15:20</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Estación Central</div><div class="schedule-note">14 horas de viaje</div></div>
-                        <div class="route-badge">La Habana → Holguín</div>
-                        <div class="schedule-card"><div><span class="schedule-time">09:30</span><span class="schedule-days">Lun, Mié, Vie</span></div><div class="schedule-platform">Estación Central</div><div class="schedule-note">Llega al día siguiente</div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel PERMISOS -->
+        <div id="busPanel" class="panel-modern active-panel"><div id="busGrid" class="cards-grid">Cargando datos desde Supabase...</div></div>
+        <div id="trainPanel" class="panel-modern"><div id="trainGrid" class="cards-grid">Cargando datos...</div></div>
         <div id="permitsPanel" class="panel-modern">
             <div class="permits-card-modern">
                 <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                <div class="permits-number" id="permitsNumber">47</div>
+                <div class="permits-number" id="permitsNumber">0</div>
                 <div class="permits-label">Medios con Permiso Excepcional</div>
             </div>
         </div>
-
-        <!-- Panel AEROPUERTO -->
         <div id="airportPanel" class="panel-modern">
             <div class="airport-card-modern">
                 <div class="airport-header-modern">
                     <i class="fas fa-plane-departure"></i>
                     <div><h3>Aeropuerto Frank País</h3><p style="font-size: 0.85rem; opacity: 0.9;">Vuelos del día</p></div>
                 </div>
-                <div id="flightsList" style="padding: 1rem;">
-                    <div class="flight-card"><div class="flight-time">08:30 | CU 801</div><div><i class="fas fa-map-marker-alt"></i> La Habana → Holguín</div><div><span class="flight-status status-programado">Programado</span></div></div>
-                    <div class="flight-card"><div class="flight-time">10:15 | CU 802</div><div><i class="fas fa-map-marker-alt"></i> Holguín → La Habana</div><div><span class="flight-status status-programado">Programado</span></div></div>
-                    <div class="flight-card"><div class="flight-time">11:45 | CU 803</div><div><i class="fas fa-map-marker-alt"></i> Miami → Holguín</div><div><span class="flight-status status-programado">Programado</span></div></div>
-                    <div class="flight-card"><div class="flight-time">17:45 | IB 323</div><div><i class="fas fa-map-marker-alt"></i> Madrid → Holguín</div><div><span class="flight-status status-demora">Demora</span><span style="margin-left:10px;">Aterrizaje estimado 19:30</span></div></div>
-                </div>
+                <div id="flightsList" style="padding: 1rem;">Cargando vuelos...</div>
             </div>
         </div>
-
-        <!-- Panel ACCIDENTALIDAD -->
         <div id="accidentsPanel" class="panel-modern">
             <div class="card-modern">
-                <div class="card-header-modern"><i class="fas fa-chart-line"></i><h3>Comportamiento de la Accidentalidad</h3></div>
+                <div class="card-header-modern">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Comportamiento de la Accidentalidad</h3>
+                </div>
                 <div class="card-body-modern">
-                    <div class="month-badge"><i class="fas fa-calendar"></i> marzo 2026</div>
+                    <div class="month-badge" id="accidentMonth"><i class="fas fa-calendar"></i> <span id="currentMonth">Cargando...</span></div>
                     <div class="stats-grid">
-                        <div class="stat-card accidentes"><i class="fas fa-car-crash" style="font-size: 2rem; color: #dc3545;"></i><div class="stat-number">12</div><div class="stat-label">Accidentes</div></div>
-                        <div class="stat-card lesionados"><i class="fas fa-user-injured" style="font-size: 2rem; color: #fd7e14;"></i><div class="stat-number">18</div><div class="stat-label">Lesionados</div></div>
-                        <div class="stat-card fallecidos"><i class="fas fa-skull-crossbones" style="font-size: 2rem; color: #6c757d;"></i><div class="stat-number">3</div><div class="stat-label">Fallecidos</div></div>
+                        <div class="stat-card accidentes">
+                            <i class="fas fa-car-crash" style="font-size: 2rem; color: #dc3545;"></i>
+                            <div class="stat-number" id="accidentesCount">0</div>
+                            <div class="stat-label">Accidentes</div>
+                        </div>
+                        <div class="stat-card lesionados">
+                            <i class="fas fa-user-injured" style="font-size: 2rem; color: #fd7e14;"></i>
+                            <div class="stat-number" id="lesionadosCount">0</div>
+                            <div class="stat-label">Lesionados</div>
+                        </div>
+                        <div class="stat-card fallecidos">
+                            <i class="fas fa-skull-crossbones" style="font-size: 2rem; color: #6c757d;"></i>
+                            <div class="stat-number" id="fallecidosCount">0</div>
+                            <div class="stat-label">Fallecidos</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Panel REUNIONES -->
         <div id="meetingsPanel" class="panel-modern">
             <div class="card-modern">
-                <div class="card-header-modern"><i class="fas fa-calendar-alt"></i><h3>Reuniones de Última Hora</h3></div>
-                <div class="card-body-modern">
-                    <div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> 28 de marzo de 2026</div><div><i class="fas fa-map-marker-alt"></i> <strong>Lugar:</strong> Terminal de Ómnibus</div><div><i class="fas fa-comment-dots"></i> <strong>Motivo:</strong> Revisión de horarios de verano</div></div>
-                    <div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> 30 de marzo de 2026</div><div><i class="fas fa-map-marker-alt"></i> <strong>Lugar:</strong> Estación Central de Trenes</div><div><i class="fas fa-comment-dots"></i> <strong>Motivo:</strong> Mantenimiento de vías</div></div>
-                    <div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> 2 de abril de 2026</div><div><i class="fas fa-map-marker-alt"></i> <strong>Lugar:</strong> Aeropuerto Frank País</div><div><i class="fas fa-comment-dots"></i> <strong>Motivo:</strong> Coordinación con aerolíneas</div></div>
+                <div class="card-header-modern">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Reuniones de Última Hora</h3>
                 </div>
+                <div class="card-body-modern" id="meetingsList">Cargando reuniones...</div>
             </div>
         </div>
     </div>
@@ -588,15 +554,150 @@
 </button>
 
 <script>
+    // ========== CONFIGURACIÓN SUPABASE ==========
+    const SUPABASE_URL = 'https://ywkpnyqcfklkuetcklks.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3a3BueXFjZmtsa3VldGNrbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODIyMjYsImV4cCI6MjA5MDQ1ODIyNn0.dq2GPOmL4fPRtLYfJidA_8YZBtsncQAZpk3e_U9_sFs';
+
+    // Verificar que Supabase está disponible
+    if (typeof supabase === 'undefined') {
+        console.error('Supabase no está disponible. Usando datos locales de respaldo.');
+        // Si falla, usar datos locales (fallback)
+        usarDatosLocales();
+    } else {
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        iniciarConSupabase(supabaseClient);
+    }
+    
+    let currentUser = null;
+    
+    // ========== DATOS LOCALES DE RESPALDO ==========
+    function usarDatosLocales() {
+        console.log('Usando datos locales de respaldo');
+        // Cargar buses
+        document.getElementById('busGrid').innerHTML = `
+            <div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>Viazul</h3></div><div class="card-body-modern"><div class="route-badge">Holguín → La Habana</div><div class="schedule-card"><div><span class="schedule-time">07:30</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div class="schedule-platform">Andén 5</div></div><div class="schedule-card"><div><span class="schedule-time">14:15</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Andén 5</div></div><div class="route-badge">La Habana → Holguín</div><div class="schedule-card"><div><span class="schedule-time">08:00</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div class="schedule-platform">Andén 12</div></div></div></div>
+            <div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>Astro</h3></div><div class="card-body-modern"><div class="route-badge">Holguín → La Habana</div><div class="schedule-card"><div><span class="schedule-time">06:00</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 8</div></div><div class="schedule-card"><div><span class="schedule-time">12:30</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 8</div></div><div class="schedule-card"><div><span class="schedule-time">19:45</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 9</div></div></div></div>`;
+        
+        document.getElementById('trainGrid').innerHTML = `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body-modern"><div class="route-badge">Holguín → La Habana</div><div class="schedule-card"><div><span class="schedule-time">15:20</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Estación Central</div></div><div class="route-badge">La Habana → Holguín</div><div class="schedule-card"><div><span class="schedule-time">09:30</span><span class="schedule-days">Lun, Mié, Vie</span></div><div class="schedule-platform">Estación Central</div></div></div></div>`;
+        
+        document.getElementById('permitsNumber').innerText = '47';
+        
+        document.getElementById('flightsList').innerHTML = `
+            <div class="flight-card"><div class="flight-time">08:30 | CU 801</div><div>La Habana → Holguín</div><div><span class="flight-status status-programado">Programado</span></div></div>
+            <div class="flight-card"><div class="flight-time">10:15 | CU 802</div><div>Holguín → La Habana</div><div><span class="flight-status status-programado">Programado</span></div></div>
+            <div class="flight-card"><div class="flight-time">11:45 | CU 803</div><div>Miami → Holguín</div><div><span class="flight-status status-programado">Programado</span></div></div>
+            <div class="flight-card"><div class="flight-time">17:45 | IB 323</div><div>Madrid → Holguín</div><div><span class="flight-status status-demora">Demora</span><span> Aterrizaje 19:30</span></div></div>`;
+        
+        document.getElementById('accidentesCount').innerText = '12';
+        document.getElementById('lesionadosCount').innerText = '18';
+        document.getElementById('fallecidosCount').innerText = '3';
+        document.getElementById('currentMonth').innerText = 'marzo 2026';
+        
+        document.getElementById('meetingsList').innerHTML = `
+            <div class="meeting-card"><div class="meeting-date">28 de marzo de 2026</div><div><strong>Lugar:</strong> Terminal de Ómnibus</div><div><strong>Motivo:</strong> Revisión de horarios</div></div>
+            <div class="meeting-card"><div class="meeting-date">30 de marzo de 2026</div><div><strong>Lugar:</strong> Estación Central</div><div><strong>Motivo:</strong> Mantenimiento de vías</div></div>
+            <div class="meeting-card"><div class="meeting-date">2 de abril de 2026</div><div><strong>Lugar:</strong> Aeropuerto Frank País</div><div><strong>Motivo:</strong> Coordinación con aerolíneas</div></div>`;
+    }
+    
+    // ========== FUNCIONES CON SUPABASE ==========
+    function iniciarConSupabase(supabaseClient) {
+        console.log('Conectando a Supabase...');
+        
+        async function cargarBuses() {
+            const { data, error } = await supabaseClient.from('bus_services').select('*');
+            if (error) { console.error('Error buses:', error); usarDatosLocales(); return; }
+            if (!data || data.length === 0) { usarDatosLocales(); return; }
+            
+            const grupos = {};
+            data.forEach(item => {
+                const key = `${item.service_name}|${item.route_direction}`;
+                if (!grupos[key]) grupos[key] = [];
+                grupos[key].push(item);
+            });
+            
+            let html = '';
+            for (let key in grupos) {
+                const [company, route] = key.split('|');
+                let itemsHtml = '';
+                grupos[key].forEach(item => {
+                    itemsHtml += `<div class="schedule-card"><div><span class="schedule-time">${item.schedule_time}</span><span class="schedule-days">${item.days}</span></div><div class="schedule-platform">${item.platform}</div><div class="schedule-note">${item.note || ''}</div></div>`;
+                });
+                html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>${company}</h3></div><div class="card-body-modern"><div class="route-badge">${route}</div>${itemsHtml}</div></div>`;
+            }
+            document.getElementById('busGrid').innerHTML = html;
+        }
+        
+        async function cargarTrenes() {
+            const { data, error } = await supabaseClient.from('train_services').select('*');
+            if (error) { console.error('Error trenes:', error); return; }
+            if (!data || data.length === 0) return;
+            
+            let html = '';
+            data.forEach(item => {
+                html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body-modern"><div class="route-badge">${item.route_direction}</div><div class="schedule-card"><div><span class="schedule-time">${item.schedule_time}</span><span class="schedule-days">${item.days}</span></div><div class="schedule-platform">${item.platform}</div><div class="schedule-note">${item.note || ''}</div></div></div></div>`;
+            });
+            document.getElementById('trainGrid').innerHTML = html;
+        }
+        
+        async function cargarPermisos() {
+            const { data, error } = await supabaseClient.from('permits_config').select('permit_count').single();
+            if (!error && data) document.getElementById('permitsNumber').innerText = data.permit_count;
+        }
+        
+        async function cargarVuelos() {
+            const { data, error } = await supabaseClient.from('flights').select('*');
+            if (error) { console.error('Error vuelos:', error); return; }
+            if (!data || data.length === 0) return;
+            
+            let html = '';
+            data.forEach(item => {
+                let bgColor = item.status === 'Programado' ? '#28a745' : (item.status === 'Demora' ? '#fd7e14' : '#dc3545');
+                html += `<div class="flight-card"><div class="flight-time">${item.scheduled_time} | ${item.flight_id}</div><div>${item.origin} → ${item.destination}</div><div><span class="flight-status" style="background:${bgColor}; color:white;">${item.status}</span>${item.note ? `<span> ${item.note}</span>` : ''}</div></div>`;
+            });
+            document.getElementById('flightsList').innerHTML = html;
+        }
+        
+        async function cargarAccidentes() {
+            const { data, error } = await supabaseClient.from('accidents_data').select('*').single();
+            if (!error && data) {
+                document.getElementById('accidentesCount').innerText = data.accidents;
+                document.getElementById('lesionadosCount').innerText = data.injured;
+                document.getElementById('fallecidosCount').innerText = data.deceased;
+                document.getElementById('currentMonth').innerText = data.month;
+            }
+        }
+        
+        async function cargarReuniones() {
+            const { data, error } = await supabaseClient.from('meetings').select('*').order('date', { ascending: false });
+            if (error) { console.error('Error reuniones:', error); return; }
+            if (!data || data.length === 0) return;
+            
+            let html = '';
+            data.forEach(item => {
+                const fecha = new Date(item.date);
+                const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+                html += `<div class="meeting-card"><div class="meeting-date">${fechaStr}</div><div><strong>Lugar:</strong> ${item.place}</div><div><strong>Motivo:</strong> ${item.reason}</div></div>`;
+            });
+            document.getElementById('meetingsList').innerHTML = html;
+        }
+        
+        // Ejecutar cargas
+        cargarBuses();
+        cargarTrenes();
+        cargarPermisos();
+        cargarVuelos();
+        cargarAccidentes();
+        cargarReuniones();
+    }
+    
+    // ========== FUNCIONES COMUNES ==========
     function mostrarFecha() {
         const fecha = new Date();
         const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('currentDate').innerText = fecha.toLocaleDateString('es-ES', opciones);
     }
     
-    let currentUser = null;
-    
-    // Datos locales para admin (simulados)
+    // Datos locales para admin
     let meetingsData = [
         { id: 1, date: "2026-03-28", place: "Terminal de Ómnibus", reason: "Revisión de horarios de verano" },
         { id: 2, date: "2026-03-30", place: "Estación Central de Trenes", reason: "Mantenimiento de vías" },
@@ -646,7 +747,7 @@
         meetingsData.forEach(item => {
             const fecha = new Date(item.date);
             const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-            html += `<div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> ${fechaStr}</div><div><i class="fas fa-map-marker-alt"></i> <strong>Lugar:</strong> ${item.place}</div><div style="margin-top:5px;"><i class="fas fa-comment-dots"></i> <strong>Motivo:</strong> ${item.reason}</div></div>`;
+            html += `<div class="meeting-card"><div class="meeting-date">${fechaStr}</div><div><strong>Lugar:</strong> ${item.place}</div><div><strong>Motivo:</strong> ${item.reason}</div></div>`;
         });
         meetingsList.innerHTML = html;
     }
