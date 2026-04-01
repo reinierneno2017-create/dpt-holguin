@@ -2,410 +2,174 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>DPT Holguín - Dirección Provincial de Transporte</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPT Holguín - Transporte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #f5f7fb;
-            color: #1a2a3a;
-            min-height: 100vh;
+            background: #f0f2f5;
+            padding: 20px;
         }
-        .navbar {
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #1e5a48; }
+        .tabs {
             display: flex;
             justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .logo { display: flex; align-items: center; gap: 12px; }
-        .logo-icon {
-            width: 45px; height: 45px;
-            background: linear-gradient(135deg, #1e5a48, #0f3a2d);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffd966;
-            font-size: 1.5rem;
-        }
-        .logo-text h1 { font-size: 1.3rem; font-weight: 700; color: #1a3a32; }
-        .logo-text p { font-size: 0.75rem; color: #6b7a6f; }
-        .hero-modern {
-            background: linear-gradient(135deg, #1a3a32 0%, #0f2c25 100%);
-            margin: 1.5rem 2rem;
-            border-radius: 32px;
-            padding: 3rem 2rem;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-modern::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,217,102,0.08) 0%, transparent 70%);
-            animation: float 12s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translate(0,0) scale(1); }
-            50% { transform: translate(10%,5%) scale(1.05); }
-        }
-        .hero-modern h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; position: relative; z-index: 1; }
-        .hero-modern h2 { font-size: 1.3rem; font-weight: 500; opacity: 0.9; margin-bottom: 1rem; position: relative; z-index: 1; }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,217,102,0.2);
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 1;
-        }
-        .tabs-modern {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            margin: 2rem 2rem 2rem;
+            gap: 10px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
-        .tab-btn-modern {
+        .tab {
             background: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 10px 25px;
             border-radius: 50px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            color: #5a6e5a;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .tab-btn-modern i { font-size: 1rem; }
-        .tab-btn-modern.active {
-            background: linear-gradient(135deg, #1e5a48, #0f3a2d);
+        .tab.active {
+            background: #1e5a48;
             color: white;
-            box-shadow: 0 8px 20px rgba(30,90,72,0.3);
-            transform: translateY(-2px);
         }
-        .tab-btn-modern:hover:not(.active) {
-            background: #e8ece6;
-            transform: translateY(-2px);
+        .panel { display: none; }
+        .panel.active-panel { display: block; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
         }
-        .panel-modern { display: none; animation: fadeInUp 0.4s ease; }
-        .panel-modern.active-panel { display: block; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .content-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem 2rem; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px,1fr)); gap: 1.8rem; }
-        .card-modern {
+        .card {
             background: white;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.04);
         }
-        .card-modern:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.1); }
-        .card-header-modern {
-            background: linear-gradient(135deg, #f8faf6, #f0f4ec);
-            padding: 1.2rem 1.5rem;
-            border-bottom: 2px solid #e2e8e0;
+        .card-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            border-bottom: 2px solid #e9ecef;
         }
-        .card-header-modern i {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #1e5a48, #0f3a2d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .card-header-modern h3 { font-size: 1.3rem; font-weight: 700; color: #1a3a32; }
-        .card-body-modern { padding: 1.2rem 1.5rem 1.5rem; }
-        .route-badge {
-            background: linear-gradient(135deg, #eef3ef, #e4ece4);
-            padding: 0.6rem 1rem;
-            border-radius: 50px;
-            margin-bottom: 1.2rem;
-            font-weight: 600;
-            color: #1a5a46;
+        .card-header i { font-size: 1.8rem; color: #1e5a48; }
+        .card-body { padding: 20px; }
+        .route-title {
+            background: #e8f0ed;
+            padding: 8px 15px;
+            border-radius: 30px;
+            margin-bottom: 15px;
             text-align: center;
-            font-size: 0.9rem;
+            font-weight: 600;
         }
-        .schedule-card {
+        .schedule-item {
             background: #fafdfa;
-            border-radius: 18px;
-            padding: 1rem;
-            margin-bottom: 1rem;
             border-left: 4px solid #2c8b6e;
-            transition: all 0.2s;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 12px;
         }
-        .schedule-card:hover { background: #f5faf5; }
         .schedule-time {
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: #1a6b54;
-            display: inline-block;
-            background: #e2f0ea;
-            padding: 0.2rem 1rem;
-            border-radius: 30px;
         }
         .schedule-days {
-            font-size: 0.8rem;
             background: #fff3cf;
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            margin-left: 0.6rem;
-            font-weight: 600;
-            color: #a66907;
-        }
-        .schedule-platform { margin-top: 0.7rem; font-size: 0.8rem; color: #6b8b7c; }
-        .schedule-note {
-            font-size: 0.7rem;
-            color: #8ba89a;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px dashed #d4e4dc;
-        }
-        .schedule-card.cancelled { background: #fee9e6; border-left-color: #dc3545; }
-        .schedule-card.delayed { background: #fff8e6; border-left-color: #ffc107; }
-        .status-badge {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            margin-left: 0.5rem;
+            font-size: 0.7rem;
+            margin-left: 8px;
         }
-        .status-cancelled { background: #dc3545; color: white; }
-        .status-delayed { background: #fd7e14; color: white; }
-        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1rem;
+            gap: 20px;
         }
         .stat-card {
             background: white;
-            border-radius: 24px;
-            padding: 1.5rem;
+            border-radius: 20px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
         }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.1); }
         .stat-number {
             font-size: 3rem;
             font-weight: 800;
-            margin: 0.5rem 0;
-        }
-        .stat-label {
-            font-size: 0.9rem;
-            color: #6b7a6f;
-            font-weight: 500;
         }
         .stat-card.accidentes .stat-number { color: #dc3545; }
         .stat-card.lesionados .stat-number { color: #fd7e14; }
         .stat-card.fallecidos .stat-number { color: #6c757d; }
-        .month-badge {
-            background: #e8ece6;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            display: inline-block;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-        }
-        
         .meeting-card {
-            background: #f8faf7;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            border-radius: 18px;
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 16px;
             border-left: 4px solid #1e5a48;
-            transition: all 0.2s;
         }
-        .meeting-card:hover { transform: translateX(5px); background: #f0f5ef; }
-        .meeting-date { font-weight: 800; color: #1e5a48; margin-bottom: 0.5rem; }
-        .meeting-place { margin: 0.3rem 0; }
-        .meeting-reason { font-size: 0.85rem; color: #6b8b7c; }
-        
-        .permits-card-modern {
-            background: linear-gradient(135deg, #1e5a48, #0f3a2d);
-            border-radius: 32px;
-            padding: 3rem 2rem;
-            text-align: center;
-            color: white;
-        }
-        .permits-number { font-size: 6rem; font-weight: 800; color: #ffd966; line-height: 1; text-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .permits-label { font-size: 1.2rem; margin-top: 0.5rem; opacity: 0.95; }
-        
-        .airport-card-modern {
+        .meeting-date { font-weight: 800; color: #1e5a48; }
+        .admin-panel {
             background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .airport-header-modern {
-            background: linear-gradient(135deg, #2c6e8f, #1a4a62);
-            padding: 1.5rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .airport-header-modern i { font-size: 2.5rem; color: #ffd966; }
-        .flight-card {
-            background: #f8faf7;
-            margin: 1rem;
-            padding: 1rem;
-            border-radius: 18px;
-            border-left: 4px solid #2c8b6e;
-            transition: all 0.2s;
-        }
-        .flight-card:hover { transform: translateX(5px); background: #f0f5ef; }
-        .flight-time { font-weight: 800; font-size: 1.1rem; color: #1e5a48; }
-        .flight-status {
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
             border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .status-programado { background: #28a745; color: white; }
-        .status-demora { background: #fd7e14; color: white; }
-        .status-cancelado { background: #dc3545; color: white; }
-        .status-aterrizado { background: #17a2b8; color: white; }
-        
-        .admin-panel-modern {
-            background: white;
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin: 2rem;
+            padding: 20px;
+            margin-top: 30px;
             border: 2px solid #ffd966;
-            max-height: 70vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
             display: none;
         }
-        
-        .admin-access-btn {
-            background: linear-gradient(135deg, #2c5a4a, #1e4a3b);
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
+        .admin-btn {
+            background: #2c5a4a;
             color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
-        .admin-access-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
-        
-        .session-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: #e8ece6;
-            padding: 0.3rem 1rem;
-            border-radius: 40px;
-        }
-        .session-info span { color: #1a5a46; font-size: 0.85rem; font-weight: 500; }
-        .session-info button { background: #dc3545; border: none; padding: 0.3rem 0.8rem; border-radius: 30px; color: white; cursor: pointer; font-size: 0.75rem; }
-        
-        .admin-section { margin-bottom: 2rem; padding: 1rem; background: #f8faf7; border-radius: 20px; }
-        .schedule-edit-item { background: white; padding: 1rem; margin-bottom: 0.8rem; border-radius: 16px; border-left: 4px solid #2c8b6e; }
-        .schedule-edit-item input, .schedule-edit-item select { padding: 0.5rem; margin: 0.3rem; border-radius: 8px; border: 1px solid #ccc; }
-        .btn-edit, .btn-cancel, .btn-delay, .btn-delete { padding: 0.4rem 0.8rem; margin: 0.2rem; border: none; border-radius: 20px; cursor: pointer; font-weight: 500; }
-        .btn-edit { background: #ffc107; color: #333; }
-        .btn-cancel { background: #dc3545; color: white; }
-        .btn-delay { background: #fd7e14; color: white; }
-        .btn-delete { background: #6c757d; color: white; }
-        .btn-add { background: #28a745; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 30px; cursor: pointer; margin-top: 0.5rem; }
-        .permission-tag { display: inline-block; background: #e2f0ea; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; margin: 0.2rem; }
-        .user-card { background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 16px; border: 1px solid #cbdcd2; }
-        .add-form { background: #eef3ef; padding: 1rem; border-radius: 20px; margin-top: 1rem; }
-        .add-form input, .add-form select { margin: 0.3rem; padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc; }
-        
-        .footer-modern {
-            background: linear-gradient(135deg, #1a3a32, #0f2c25);
-            margin-top: 2rem;
-            padding: 2rem;
+        .footer {
             text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #1a3a32;
             color: #b8d4c8;
+            border-radius: 20px;
         }
-        
         .login-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.8);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 1000;
         }
         .login-card {
             background: white;
-            padding: 2rem;
-            border-radius: 32px;
-            width: 340px;
+            padding: 30px;
+            border-radius: 20px;
+            width: 320px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         .login-card input {
             width: 100%;
-            padding: 0.8rem;
-            margin: 0.8rem 0;
+            padding: 10px;
+            margin: 10px 0;
             border-radius: 30px;
             border: 1px solid #ddd;
-            font-family: 'Inter', sans-serif;
         }
         .login-card button {
-            background: linear-gradient(135deg, #1e5a48, #0f3a2d);
+            background: #1e5a48;
             color: white;
-            padding: 0.8rem;
+            padding: 10px;
             border: none;
             border-radius: 30px;
             width: 100%;
             cursor: pointer;
-            font-weight: 600;
-            margin-top: 0.5rem;
         }
-        
         .refresh-btn {
             position: fixed;
             bottom: 20px;
@@ -417,144 +181,78 @@
             height: 55px;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 999;
             font-size: 1.2rem;
-            transition: all 0.3s ease;
+            z-index: 999;
         }
-        .refresh-btn:hover {
-            background: #0f3a2d;
-            transform: rotate(180deg);
+        .btn-edit, .btn-cancel, .btn-delay, .btn-delete {
+            padding: 4px 10px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            margin: 2px;
         }
-        
-        @media (max-width: 768px) {
-            .nav-container { flex-direction: column; text-align: center; }
-            .hero-modern { margin: 1rem; padding: 2rem 1rem; }
-            .hero-modern h1 { font-size: 1.8rem; }
-            .content-container { padding: 0 1rem; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .permits-number { font-size: 4rem; }
-            .admin-panel-modern { margin: 1rem; }
-            .tab-btn-modern { padding: 0.5rem 1rem; font-size: 0.8rem; }
-            .refresh-btn { width: 45px; height: 45px; font-size: 1rem; }
+        .btn-edit { background: #ffc107; }
+        .btn-cancel { background: #dc3545; color: white; }
+        .btn-delay { background: #fd7e14; color: white; }
+        .btn-delete { background: #6c757d; color: white; }
+        .btn-add { background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; border: none; cursor: pointer; }
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            .grid { grid-template-columns: 1fr; }
+            .refresh-btn { width: 45px; height: 45px; }
         }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="nav-container">
-        <div class="logo">
-            <div class="logo-icon"><i class="fas fa-bus-alt"></i></div>
-            <div class="logo-text"><h1>DPT Holguín</h1><p>Dirección Provincial de Transporte</p></div>
-        </div>
-    </div>
-</nav>
-
-<div id="publicContent">
-    <div class="hero-modern">
-        <h1>Transporte en Holguín</h1>
-        <h2>Información oficial de salidas, servicios y seguridad vial</h2>
-        <div class="hero-badge" id="dateBadge">
-            <i class="fas fa-calendar-alt"></i> <span id="currentDate"></span>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-bus"></i> DPT Holguín</h1>
+        <p>Dirección Provincial de Transporte - Información de salidas</p>
     </div>
 
-    <div class="tabs-modern">
-        <button class="tab-btn-modern active" id="tabBusBtn"><i class="fas fa-bus"></i> ÓMNIBUS</button>
-        <button class="tab-btn-modern" id="tabTrainBtn"><i class="fas fa-train"></i> TREN</button>
-        <button class="tab-btn-modern" id="tabPermitsBtn"><i class="fas fa-file-alt"></i> PERMISOS</button>
-        <button class="tab-btn-modern" id="tabAirportBtn"><i class="fas fa-plane"></i> AEROPUERTO</button>
-        <button class="tab-btn-modern" id="tabAccidentsBtn"><i class="fas fa-chart-line"></i> ACCIDENTALIDAD</button>
-        <button class="tab-btn-modern" id="tabMeetingsBtn"><i class="fas fa-calendar-alt"></i> REUNIONES</button>
+    <div class="tabs">
+        <button class="tab active" onclick="showPanel('bus')">🚌 ÓMNIBUS</button>
+        <button class="tab" onclick="showPanel('train')">🚆 TREN</button>
+        <button class="tab" onclick="showPanel('permits')">📄 PERMISOS</button>
+        <button class="tab" onclick="showPanel('flights')">✈️ AEROPUERTO</button>
+        <button class="tab" onclick="showPanel('accidents')">📊 ACCIDENTALIDAD</button>
+        <button class="tab" onclick="showPanel('meetings')">📅 REUNIONES</button>
     </div>
 
-    <div class="content-container">
-        <div id="busPanel" class="panel-modern active-panel"><div id="busGrid" class="cards-grid">Cargando datos...</div></div>
-        <div id="trainPanel" class="panel-modern"><div id="trainGrid" class="cards-grid">Cargando datos...</div></div>
-        <div id="permitsPanel" class="panel-modern">
-            <div class="permits-card-modern">
-                <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                <div class="permits-number" id="permitsNumber">0</div>
-                <div class="permits-label">Medios con Permiso Excepcional</div>
-            </div>
-        </div>
-        <div id="airportPanel" class="panel-modern">
-            <div class="airport-card-modern">
-                <div class="airport-header-modern">
-                    <i class="fas fa-plane-departure"></i>
-                    <div><h3>Aeropuerto Frank País</h3><p style="font-size: 0.85rem; opacity: 0.9;">Vuelos del día</p></div>
-                </div>
-                <div id="flightsList" style="padding: 1rem;">Cargando vuelos...</div>
-            </div>
-        </div>
-        <div id="accidentsPanel" class="panel-modern">
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="fas fa-chart-line"></i><h3>Comportamiento de la Accidentalidad</h3></div>
-                <div class="card-body-modern">
-                    <div class="month-badge"><i class="fas fa-calendar"></i> <span id="currentMonth">Cargando...</span></div>
-                    <div class="stats-grid">
-                        <div class="stat-card accidentes"><i class="fas fa-car-crash" style="font-size: 2rem; color: #dc3545;"></i><div class="stat-number" id="accidentesCount">0</div><div class="stat-label">Accidentes</div></div>
-                        <div class="stat-card lesionados"><i class="fas fa-user-injured" style="font-size: 2rem; color: #fd7e14;"></i><div class="stat-number" id="lesionadosCount">0</div><div class="stat-label">Lesionados</div></div>
-                        <div class="stat-card fallecidos"><i class="fas fa-skull-crossbones" style="font-size: 2rem; color: #6c757d;"></i><div class="stat-number" id="fallecidosCount">0</div><div class="stat-label">Fallecidos</div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="meetingsPanel" class="panel-modern">
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="fas fa-calendar-alt"></i><h3>Reuniones de Última Hora</h3></div>
-                <div class="card-body-modern" id="meetingsList">Cargando reuniones...</div>
-            </div>
-        </div>
-    </div>
+    <div id="panelBus" class="panel active-panel"><div id="busGrid" class="grid">Cargando...</div></div>
+    <div id="panelTrain" class="panel"><div id="trainGrid" class="grid">Cargando...</div></div>
+    <div id="panelPermits" class="panel"><div style="background:linear-gradient(135deg,#1e5a48,#0f3a2d); border-radius:20px; padding:40px; text-align:center; color:white;"><div style="font-size:4rem; font-weight:800; color:#ffd966;" id="permitsNumber">0</div><div>Medios con Permiso Excepcional</div></div></div>
+    <div id="panelFlights" class="panel"><div id="flightsGrid" class="grid">Cargando...</div></div>
+    <div id="panelAccidents" class="panel"><div class="card"><div class="card-header"><i class="fas fa-chart-line"></i><h3>Comportamiento de la Accidentalidad</h3></div><div class="card-body"><div class="stats-grid"><div class="stat-card accidentes"><div class="stat-number" id="accidentesCount">0</div><div>Accidentes</div></div><div class="stat-card lesionados"><div class="stat-number" id="lesionadosCount">0</div><div>Lesionados</div></div><div class="stat-card fallecidos"><div class="stat-number" id="fallecidosCount">0</div><div>Fallecidos</div></div></div><div style="margin-top:15px; text-align:center;" id="accidentMonth"></div></div></div></div>
+    <div id="panelMeetings" class="panel"><div class="card"><div class="card-header"><i class="fas fa-calendar-alt"></i><h3>Reuniones de Última Hora</h3></div><div class="card-body" id="meetingsList">Cargando...</div></div></div>
+
+    <div style="text-align:center; margin:20px 0;"><button class="admin-btn" onclick="showLogin()"><i class="fas fa-lock"></i> Administración</button></div>
+    <div id="adminPanel" class="admin-panel"></div>
+
+    <div class="footer"><p><i class="fas fa-code"></i> Desarrollado Por Reynier Velázquez Morales - Todos los Derechos Reservados</p></div>
 </div>
-
-<div id="adminBtnContainer" style="text-align: center; margin: 1rem 2rem;">
-    <button class="admin-access-btn" onclick="showLogin()"><i class="fas fa-lock"></i> Acceso Administración</button>
-</div>
-<div id="adminPanel" class="admin-panel-modern" style="display: none;"></div>
-
-<footer class="footer-modern">
-    <p><i class="fas fa-clock"></i> Horarios sujetos a cambios. Consulte con antelación.</p>
-    <p style="margin-top: 0.5rem; font-size: 0.85rem;">
-        <i class="fas fa-code"></i> Desarrollado Por Reynier Velázquez Morales <i class="fas fa-copyright"></i> Todos los Derechos Reservados
-    </p>
-</footer>
 
 <button class="refresh-btn" onclick="location.reload()"><i class="fas fa-sync-alt"></i></button>
 
 <script>
-    // ========== CONFIGURACIÓN SUPABASE ==========
     const SUPABASE_URL = 'https://ywkpnyqcfklkuetcklks.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3a3BueXFjZmtsa3VldGNrbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODIyMjYsImV4cCI6MjA5MDQ1ODIyNn0.dq2GPOmL4fPRtLYfJidA_8YZBtsncQAZpk3e_U9_sFs';
 
     const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
     let currentUser = null;
-    let nextScheduleId = 100;
-    let nextFlightId = 5;
-    let nextMeetingId = 4;
-    let nextUserId = 2;
-    
-    const PERMISSIONS = { BUS: 'bus', TRAIN: 'train', PERMITS: 'permits', AIRPORT: 'airport', ACCIDENTS: 'accidents', MEETINGS: 'meetings', USERS: 'users' };
-    
-    function hasPermission(permission) {
-        if (!currentUser) return false;
-        if (currentUser.role === 'super_admin') return true;
-        return currentUser.permissions && currentUser.permissions.includes(permission);
+
+    function showPanel(panel) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
+        document.getElementById('panel' + panel.charAt(0).toUpperCase() + panel.slice(1)).classList.add('active-panel');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
     }
-    
-    function mostrarFecha() {
-        const fecha = new Date();
-        document.getElementById('currentDate').innerText = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-        document.getElementById('currentMonth').innerText = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
-    }
-    
-    // ========== FUNCIONES DE CARGA ==========
+
+    // ========== CARGAR DATOS ==========
     async function cargarBuses() {
         const { data, error } = await supabase.from('bus_services').select('*');
-        if (error) { console.error(error); document.getElementById('busGrid').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
+        if (error) { console.error('Error:', error); document.getElementById('busGrid').innerHTML = '<div style="text-align:center;padding:20px;">Error: ' + error.message + '</div>'; return; }
         if (!data || data.length === 0) { document.getElementById('busGrid').innerHTML = '<div style="text-align:center;padding:20px;">No hay datos</div>'; return; }
         
         const grupos = {};
@@ -569,41 +267,21 @@
             const [company, route] = key.split('|');
             let itemsHtml = '';
             grupos[key].forEach(item => {
-                let statusClass = '', statusBadge = '', displayTime = item.schedule_time;
-                if (item.status === 'cancelled') {
-                    statusClass = 'cancelled';
-                    statusBadge = '<span class="status-badge status-cancelled"><i class="fas fa-times-circle"></i> CANCELADO</span>';
-                } else if (item.status === 'delayed') {
-                    statusClass = 'delayed';
-                    displayTime = item.new_time ? `${item.new_time} (Original: ${item.schedule_time})` : item.schedule_time;
-                    statusBadge = '<span class="status-badge status-delayed"><i class="fas fa-clock"></i> DEMORADO</span>';
-                }
-                let reasonHtml = (item.status === 'cancelled' || item.status === 'delayed') && item.delay_reason ? `<div style="margin-top:5px; font-size:0.7rem; color:#b33;">📌 ${item.delay_reason}</div>` : '';
-                itemsHtml += `<div class="schedule-card ${statusClass}"><div><span class="schedule-time">${displayTime}</span><span class="schedule-days">${item.days}</span>${statusBadge}</div><div class="schedule-platform"><i class="fas fa-map-marker-alt"></i> ${item.platform}</div><div class="schedule-note">${item.note || ''} ${reasonHtml}</div></div>`;
+                itemsHtml += `<div class="schedule-item"><div><span class="schedule-time">${item.schedule_time}</span><span class="schedule-days">${item.days}</span></div><div>${item.platform}</div><div>${item.note || ''}</div></div>`;
             });
-            html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>${company}</h3></div><div class="card-body-modern"><div class="route-badge"><i class="fas fa-arrow-right"></i> ${route}</div>${itemsHtml}</div></div>`;
+            html += `<div class="card"><div class="card-header"><i class="fas fa-bus"></i><h3>${company}</h3></div><div class="card-body"><div class="route-title">${route}</div>${itemsHtml}</div></div>`;
         }
         document.getElementById('busGrid').innerHTML = html;
     }
     
     async function cargarTrenes() {
         const { data, error } = await supabase.from('train_services').select('*');
-        if (error) { console.error(error); document.getElementById('trainGrid').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
+        if (error) { console.error(error); return; }
         if (!data || data.length === 0) { document.getElementById('trainGrid').innerHTML = '<div style="text-align:center;padding:20px;">No hay datos</div>'; return; }
         
         let html = '';
         data.forEach(item => {
-            let statusClass = '', statusBadge = '', displayTime = item.schedule_time;
-            if (item.status === 'cancelled') {
-                statusClass = 'cancelled';
-                statusBadge = '<span class="status-badge status-cancelled"><i class="fas fa-times-circle"></i> CANCELADO</span>';
-            } else if (item.status === 'delayed') {
-                statusClass = 'delayed';
-                displayTime = item.new_time ? `${item.new_time} (Original: ${item.schedule_time})` : item.schedule_time;
-                statusBadge = '<span class="status-badge status-delayed"><i class="fas fa-clock"></i> DEMORADO</span>';
-            }
-            let reasonHtml = (item.status === 'cancelled' || item.status === 'delayed') && item.delay_reason ? `<div style="margin-top:5px; font-size:0.7rem; color:#b33;">📌 ${item.delay_reason}</div>` : '';
-            html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body-modern"><div class="route-badge">${item.route_direction}</div><div class="schedule-card ${statusClass}"><div><span class="schedule-time">${displayTime}</span><span class="schedule-days">${item.days}</span>${statusBadge}</div><div class="schedule-platform"><i class="fas fa-map-marker-alt"></i> ${item.platform}</div><div class="schedule-note">${item.note || ''} ${reasonHtml}</div></div></div></div>`;
+            html += `<div class="card"><div class="card-header"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body"><div class="route-title">${item.route_direction}</div><div class="schedule-item"><div><span class="schedule-time">${item.schedule_time}</span><span class="schedule-days">${item.days}</span></div><div>${item.platform}</div><div>${item.note || ''}</div></div></div></div>`;
         });
         document.getElementById('trainGrid').innerHTML = html;
     }
@@ -616,15 +294,15 @@
     
     async function cargarVuelos() {
         const { data, error } = await supabase.from('flights').select('*');
-        if (error) { console.error(error); document.getElementById('flightsList').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
-        if (!data || data.length === 0) { document.getElementById('flightsList').innerHTML = '<div style="text-align:center;padding:20px;">No hay vuelos</div>'; return; }
+        if (error) { console.error(error); return; }
+        if (!data || data.length === 0) { document.getElementById('flightsGrid').innerHTML = '<div style="text-align:center;padding:20px;">No hay vuelos</div>'; return; }
         
         let html = '';
         data.forEach(item => {
             let bgColor = item.status === 'Programado' ? '#28a745' : (item.status === 'Demora' ? '#fd7e14' : '#dc3545');
-            html += `<div class="flight-card"><div class="flight-time"><i class="fas fa-clock"></i> ${item.scheduled_time} | ${item.flight_id}</div><div><i class="fas fa-map-marker-alt"></i> ${item.origin} → ${item.destination}</div><div><span class="flight-status" style="background:${bgColor}; color:white;">${item.status}</span>${item.note ? `<span style="margin-left:10px;">${item.note}</span>` : ''}</div></div>`;
+            html += `<div class="card"><div class="card-header"><i class="fas fa-plane"></i><h3>${item.flight_id}</h3></div><div class="card-body"><div><strong>${item.origin}</strong> → <strong>${item.destination}</strong></div><div class="schedule-time" style="font-size:1rem;">${item.scheduled_time}</div><div><span style="background:${bgColor}; color:white; padding:3px 12px; border-radius:20px;">${item.status}</span></div><div>${item.note || ''}</div></div></div>`;
         });
-        document.getElementById('flightsList').innerHTML = html;
+        document.getElementById('flightsGrid').innerHTML = html;
     }
     
     async function cargarAccidentes() {
@@ -633,31 +311,25 @@
             document.getElementById('accidentesCount').innerText = data.accidents;
             document.getElementById('lesionadosCount').innerText = data.injured;
             document.getElementById('fallecidosCount').innerText = data.deceased;
-            document.getElementById('currentMonth').innerText = data.month;
+            document.getElementById('accidentMonth').innerHTML = `<i class="fas fa-calendar"></i> ${data.month}`;
         }
     }
     
     async function cargarReuniones() {
         const { data, error } = await supabase.from('meetings').select('*').order('date', { ascending: false });
-        if (error) { console.error(error); document.getElementById('meetingsList').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
-        if (!data || data.length === 0) { document.getElementById('meetingsList').innerHTML = '<p>No hay reuniones programadas</p>'; return; }
+        if (error) { console.error(error); return; }
+        if (!data || data.length === 0) { document.getElementById('meetingsList').innerHTML = '<p>No hay reuniones</p>'; return; }
         
         let html = '';
         data.forEach(item => {
             const fecha = new Date(item.date);
             const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-            html += `<div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> ${fechaStr}</div><div><i class="fas fa-map-marker-alt"></i> <strong>Lugar:</strong> ${item.place}</div><div><i class="fas fa-comment-dots"></i> <strong>Motivo:</strong> ${item.reason}</div></div>`;
+            html += `<div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> ${fechaStr}</div><div><strong>Lugar:</strong> ${item.place}</div><div><strong>Motivo:</strong> ${item.reason}</div></div>`;
         });
         document.getElementById('meetingsList').innerHTML = html;
     }
     
-    async function cargarUsuarios() {
-        const { data, error } = await supabase.from('users').select('*');
-        if (error) return [];
-        return data || [];
-    }
-    
-    // ========== ADMIN PANEL COMPLETO ==========
+    // ========== ADMIN ==========
     async function renderAdminPanel() {
         if (!currentUser) return;
         
@@ -667,100 +339,90 @@
         const { data: permits } = await supabase.from('permits_config').select('permit_count').single();
         const { data: accidents } = await supabase.from('accidents_data').select('*').single();
         const { data: meetings } = await supabase.from('meetings').select('*');
-        const usersData = await cargarUsuarios();
         
-        let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-            <h3><i class="fas fa-tools"></i> Panel de Administración - ${currentUser.name}</h3>
-            <button onclick="logout()" style="background:#dc3545; color:white; border:none; padding:0.5rem 1rem; border-radius:30px;">Cerrar sesión</button>
+        let html = `<div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <h3>Panel Admin - ${currentUser.name}</h3>
+            <button onclick="logout()" style="background:#dc3545; color:white; border:none; padding:8px 15px; border-radius:30px;">Cerrar</button>
         </div>`;
         
-        // Gestión de Usuarios
-        if (hasPermission(PERMISSIONS.USERS)) {
-            html += `<div class="admin-section"><h4><i class="fas fa-users"></i> Gestión de Administradores</h4>`;
-            for (let user of usersData) {
-                html += `<div class="user-card"><strong>${user.name}</strong> (${user.username})${user.role === 'super_admin' ? '<span class="permission-tag" style="background:#ffd966;">Super Admin</span>' : ''}<div>Permisos: ${user.permissions?.map(p => ({bus:'🚌',train:'🚆',permits:'📄',airport:'✈️',accidents:'📊',meetings:'📅'}[p] || p).join(', ') || 'Ninguno'}</div>${user.role !== 'super_admin' ? `<button class="btn-cancel" onclick="eliminarUsuario(${user.id})">Eliminar</button>` : ''}</div>`;
-            }
-            html += `<div class="add-form"><h5>Crear administrador</h5>
-                <input type="text" id="newUsername" placeholder="Usuario"><input type="password" id="newPassword" placeholder="Contraseña"><input type="text" id="newName" placeholder="Nombre">
-                <div><label><input type="checkbox" id="permBus"> 🚌</label><label><input type="checkbox" id="permTrain"> 🚆</label><label><input type="checkbox" id="permPermits"> 📄</label><label><input type="checkbox" id="permAirport"> ✈️</label><label><input type="checkbox" id="permAccidents"> 📊</label><label><input type="checkbox" id="permMeetings"> 📅</label></div>
-                <button class="btn-add" onclick="crearUsuario()">Crear</button>
-            </div></div>`;
-        }
+        // Permisos
+        html += `<div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:15px;">
+            <h4>📄 Permisos Excepcionales</h4>
+            <input type="number" id="permitsInput" value="${permits?.permit_count || 0}" style="width:100px;">
+            <button onclick="actualizarPermisos()" class="btn-edit">Actualizar</button>
+        </div>`;
         
-        // Permisos Excepcionales
-        if (hasPermission(PERMISSIONS.PERMITS)) {
-            html += `<div class="admin-section"><h4>📄 Permisos Excepcionales</h4><input type="number" id="permitsInput" value="${permits?.permit_count || 47}" style="width:100px;"><button class="btn-edit" onclick="actualizarPermisos()">Actualizar</button></div>`;
-        }
-        
-        // Accidentalidad
-        if (hasPermission(PERMISSIONS.ACCIDENTS)) {
-            html += `<div class="admin-section"><h4>📊 Accidentalidad</h4>
-                <label>Mes:</label><input type="text" id="accidentMonthInput" value="${accidents?.month || ''}"><br>
-                <label>Accidentes:</label><input type="number" id="accidentsInput" value="${accidents?.accidents || 0}"><br>
-                <label>Lesionados:</label><input type="number" id="injuredInput" value="${accidents?.injured || 0}"><br>
-                <label>Fallecidos:</label><input type="number" id="deceasedInput" value="${accidents?.deceased || 0}"><br>
-                <button class="btn-add" onclick="actualizarAccidentes()">Actualizar</button>
-            </div>`;
-        }
+        // Accidentes
+        html += `<div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:15px;">
+            <h4>📊 Accidentalidad</h4>
+            <label>Mes:</label><input type="text" id="accidentMonthInput" value="${accidents?.month || ''}"><br>
+            <label>Accidentes:</label><input type="number" id="accidentsInput" value="${accidents?.accidents || 0}"><br>
+            <label>Lesionados:</label><input type="number" id="injuredInput" value="${accidents?.injured || 0}"><br>
+            <label>Fallecidos:</label><input type="number" id="deceasedInput" value="${accidents?.deceased || 0}"><br>
+            <button onclick="actualizarAccidentes()" class="btn-add">Actualizar</button>
+        </div>`;
         
         // Reuniones
-        if (hasPermission(PERMISSIONS.MEETINGS)) {
-            html += `<div class="admin-section"><h4>📅 Reuniones</h4>`;
-            for (let m of meetings || []) {
-                html += `<div class="schedule-edit-item"><strong>${m.date}</strong> - ${m.place}<br>
-                    <input type="text" id="meetingPlace_${m.id}" value="${m.place}"><input type="text" id="meetingReason_${m.id}" value="${m.reason}">
-                    <button class="btn-edit" onclick="actualizarReunion(${m.id})">Actualizar</button>
-                    <button class="btn-delete" onclick="eliminarReunion(${m.id})">Eliminar</button>
-                </div>`;
-            }
-            html += `<div class="add-form"><input type="date" id="newMeetingDate"><input type="text" id="newMeetingPlace" placeholder="Lugar"><input type="text" id="newMeetingReason" placeholder="Motivo"><button class="btn-add" onclick="agregarReunion()">Agregar</button></div></div>`;
-        }
+        html += `<div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:15px;">
+            <h4>📅 Reuniones</h4>`;
+        meetings?.forEach(m => {
+            html += `<div style="background:white; padding:10px; margin-bottom:8px; border-radius:12px;">
+                <strong>${m.date}</strong> - ${m.place}<br>
+                <input type="text" id="meetingPlace_${m.id}" value="${m.place}" style="width:150px;">
+                <input type="text" id="meetingReason_${m.id}" value="${m.reason}" style="width:200px;">
+                <button onclick="actualizarReunion(${m.id})" class="btn-edit">Actualizar</button>
+                <button onclick="eliminarReunion(${m.id})" class="btn-delete">Eliminar</button>
+            </div>`;
+        });
+        html += `<div><input type="date" id="newMeetingDate"><input type="text" id="newMeetingPlace" placeholder="Lugar"><input type="text" id="newMeetingReason" placeholder="Motivo"><button onclick="agregarReunion()" class="btn-add">Agregar</button></div></div>`;
+        
+        // Buses
+        html += `<div style="margin-bottom:20px;"><h4>🚌 Ómnibus</h4>`;
+        buses?.forEach(b => {
+            html += `<div style="background:white; padding:10px; margin-bottom:8px; border-radius:12px;">
+                <strong>${b.service_name}</strong> - ${b.route_direction}<br>
+                Horario: ${b.schedule_time}<br>
+                <input type="text" id="time_${b.schedule_id}" placeholder="Nueva hora" style="width:80px;">
+                <input type="text" id="reason_${b.schedule_id}" placeholder="Motivo" style="width:100px;">
+                <button onclick="cambiarHoraBus('${b.schedule_id}')" class="btn-edit">Hora</button>
+                <button onclick="marcarDemoraBus('${b.schedule_id}')" class="btn-delay">Demora</button>
+                <button onclick="marcarCancelacionBus('${b.schedule_id}')" class="btn-cancel">Cancelar</button>
+                <button onclick="eliminarBus('${b.schedule_id}')" class="btn-delete">Eliminar</button>
+            </div>`;
+        });
+        html += `<div><input type="text" id="newBusCompany" placeholder="Empresa"><input type="text" id="newBusRoute" placeholder="Ruta"><input type="text" id="newBusTime" placeholder="Hora"><input type="text" id="newBusDays" placeholder="Días"><button onclick="agregarBus()" class="btn-add">Agregar</button></div></div>`;
+        
+        // Trenes
+        html += `<div style="margin-bottom:20px;"><h4>🚆 Tren</h4>`;
+        trains?.forEach(t => {
+            html += `<div style="background:white; padding:10px; margin-bottom:8px; border-radius:12px;">
+                <strong>${t.route_direction}</strong><br>
+                Horario: ${t.schedule_time}<br>
+                <input type="text" id="time_${t.schedule_id}" placeholder="Nueva hora" style="width:80px;">
+                <input type="text" id="reason_${t.schedule_id}" placeholder="Motivo" style="width:100px;">
+                <button onclick="cambiarHoraTren('${t.schedule_id}')" class="btn-edit">Hora</button>
+                <button onclick="marcarDemoraTren('${t.schedule_id}')" class="btn-delay">Demora</button>
+                <button onclick="marcarCancelacionTren('${t.schedule_id}')" class="btn-cancel">Cancelar</button>
+                <button onclick="eliminarTren('${t.schedule_id}')" class="btn-delete">Eliminar</button>
+            </div>`;
+        });
+        html += `<div><input type="text" id="newTrainRoute" placeholder="Ruta"><input type="text" id="newTrainTime" placeholder="Hora"><input type="text" id="newTrainDays" placeholder="Días"><button onclick="agregarTren()" class="btn-add">Agregar</button></div></div>`;
         
         // Vuelos
-        if (hasPermission(PERMISSIONS.AIRPORT)) {
-            html += `<div class="admin-section"><h4>✈️ Vuelos</h4>`;
-            for (let f of flights || []) {
-                html += `<div class="schedule-edit-item"><strong>${f.flight_id}</strong> - ${f.origin} → ${f.destination}<br>
-                    <select id="status_${f.flight_id}"><option ${f.status === 'Programado' ? 'selected' : ''}>Programado</option><option ${f.status === 'Demora' ? 'selected' : ''}>Demora</option><option ${f.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option></select>
-                    <input type="text" id="note_${f.flight_id}" value="${f.note || ''}" placeholder="Nota">
-                    <button class="btn-edit" onclick="actualizarVuelo('${f.flight_id}')">Actualizar</button>
-                    <button class="btn-delete" onclick="eliminarVuelo('${f.flight_id}')">Eliminar</button>
-                </div>`;
-            }
-            html += `<div class="add-form"><input type="text" id="newFlightId" placeholder="ID"><input type="text" id="newOrigin" placeholder="Origen"><input type="text" id="newDestination" placeholder="Destino"><input type="text" id="newFlightTime" placeholder="Hora"><select id="newFlightStatus"><option>Programado</option><option>Demora</option><option>Cancelado</option></select><button class="btn-add" onclick="agregarVuelo()">Agregar</button></div></div>`;
-        }
-        
-        // Ómnibus
-        if (hasPermission(PERMISSIONS.BUS)) {
-            html += `<div class="admin-section"><h4>🚌 Ómnibus</h4>`;
-            for (let s of buses || []) {
-                html += `<div class="schedule-edit-item"><strong>${s.service_name}</strong> - ${s.route_direction}<br>Horario: ${s.schedule_time}<br>
-                    <input type="text" id="newTime_${s.schedule_id}" placeholder="Nueva hora"><input type="text" id="reason_${s.schedule_id}" placeholder="Motivo">
-                    <button class="btn-edit" onclick="editarHoraBus('${s.schedule_id}')">Hora</button>
-                    <button class="btn-delay" onclick="marcarDemoraBus('${s.schedule_id}')">Demora</button>
-                    <button class="btn-cancel" onclick="marcarCancelacionBus('${s.schedule_id}')">Cancelar</button>
-                    <button class="btn-delete" onclick="eliminarBus('${s.schedule_id}')">Eliminar</button>
-                    <button class="btn-edit" onclick="reactivarBus('${s.schedule_id}')" style="background:#28a745;">Reactivar</button>
-                </div>`;
-            }
-            html += `<div class="add-form"><select id="newBusCompany"><option>Viazul</option><option>Astro</option></select><input type="text" id="newBusDirection" placeholder="Dirección"><input type="text" id="newBusTime" placeholder="Hora"><input type="text" id="newBusDays" placeholder="Días"><input type="text" id="newBusPlatform" placeholder="Andén"><input type="text" id="newBusNote" placeholder="Nota"><button class="btn-add" onclick="agregarBus()">Agregar</button></div></div>`;
-        }
-        
-        // Tren
-        if (hasPermission(PERMISSIONS.TRAIN)) {
-            html += `<div class="admin-section"><h4>🚆 Tren</h4>`;
-            for (let s of trains || []) {
-                html += `<div class="schedule-edit-item"><strong>${s.route_direction}</strong><br>Horario: ${s.schedule_time}<br>
-                    <input type="text" id="newTime_${s.schedule_id}" placeholder="Nueva hora"><input type="text" id="reason_${s.schedule_id}" placeholder="Motivo">
-                    <button class="btn-edit" onclick="editarHoraTren('${s.schedule_id}')">Hora</button>
-                    <button class="btn-delay" onclick="marcarDemoraTren('${s.schedule_id}')">Demora</button>
-                    <button class="btn-cancel" onclick="marcarCancelacionTren('${s.schedule_id}')">Cancelar</button>
-                    <button class="btn-delete" onclick="eliminarTren('${s.schedule_id}')">Eliminar</button>
-                    <button class="btn-edit" onclick="reactivarTren('${s.schedule_id}')" style="background:#28a745;">Reactivar</button>
-                </div>`;
-            }
-            html += `<div class="add-form"><input type="text" id="newTrainDirection" placeholder="Dirección"><input type="text" id="newTrainTime" placeholder="Hora"><input type="text" id="newTrainDays" placeholder="Días"><input type="text" id="newTrainPlatform" placeholder="Andén"><input type="text" id="newTrainNote" placeholder="Nota"><button class="btn-add" onclick="agregarTren()">Agregar</button></div></div>`;
-        }
+        html += `<div><h4>✈️ Vuelos</h4>`;
+        flights?.forEach(f => {
+            html += `<div style="background:white; padding:10px; margin-bottom:8px; border-radius:12px;">
+                <strong>${f.flight_id}</strong> - ${f.origin} → ${f.destination}<br>
+                Hora: ${f.scheduled_time} | Estado: ${f.status}<br>
+                <select id="status_${f.flight_id}">
+                    <option ${f.status === 'Programado' ? 'selected' : ''}>Programado</option>
+                    <option ${f.status === 'Demora' ? 'selected' : ''}>Demora</option>
+                    <option ${f.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                </select>
+                <button onclick="cambiarEstadoVuelo('${f.flight_id}')" class="btn-edit">Actualizar</button>
+            </div>`;
+        });
+        html += `<div><input type="text" id="newFlightId" placeholder="ID"><input type="text" id="newOrigin" placeholder="Origen"><input type="text" id="newDest" placeholder="Destino"><input type="text" id="newFlightTime" placeholder="Hora"><select id="newFlightStatus"><option>Programado</option><option>Demora</option><option>Cancelado</option></select><button onclick="agregarVuelo()" class="btn-add">Agregar</button></div></div>`;
         
         document.getElementById('adminPanel').innerHTML = html;
         document.getElementById('adminPanel').style.display = 'block';
@@ -810,36 +472,8 @@
         alert('Agregado');
     };
     
-    window.actualizarVuelo = async function(flightId) {
-        const status = document.getElementById(`status_${flightId}`).value;
-        const note = document.getElementById(`note_${flightId}`).value;
-        await supabase.from('flights').update({ status, note }).eq('flight_id', flightId);
-        cargarVuelos();
-        alert('Actualizado');
-    };
-    
-    window.eliminarVuelo = async function(flightId) {
-        if (confirm('¿Eliminar vuelo?')) {
-            await supabase.from('flights').delete().eq('flight_id', flightId);
-            cargarVuelos();
-            alert('Eliminado');
-        }
-    };
-    
-    window.agregarVuelo = async function() {
-        const flightId = document.getElementById('newFlightId').value;
-        const origin = document.getElementById('newOrigin').value;
-        const destination = document.getElementById('newDestination').value;
-        const time = document.getElementById('newFlightTime').value;
-        const status = document.getElementById('newFlightStatus').value;
-        if (!flightId || !origin || !destination || !time) { alert('Complete campos'); return; }
-        await supabase.from('flights').insert([{ flight_id: flightId, origin, destination, scheduled_time: time, status, note: '' }]);
-        cargarVuelos();
-        alert('Agregado');
-    };
-    
-    window.editarHoraBus = async function(scheduleId) {
-        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
+    window.cambiarHoraBus = async function(scheduleId) {
+        const newTime = document.getElementById(`time_${scheduleId}`).value;
         if (!newTime) { alert('Ingrese hora'); return; }
         await supabase.from('bus_services').update({ schedule_time: newTime }).eq('schedule_id', scheduleId);
         cargarBuses();
@@ -849,10 +483,7 @@
     window.marcarDemoraBus = async function(scheduleId) {
         const reason = document.getElementById(`reason_${scheduleId}`).value;
         if (!reason) { alert('Ingrese motivo'); return; }
-        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
-        const updateData = { status: 'delayed', delay_reason: reason };
-        if (newTime) updateData.new_time = newTime;
-        await supabase.from('bus_services').update(updateData).eq('schedule_id', scheduleId);
+        await supabase.from('bus_services').update({ status: 'delayed', delay_reason: reason }).eq('schedule_id', scheduleId);
         cargarBuses();
         alert('Demorada');
     };
@@ -866,39 +497,30 @@
     };
     
     window.eliminarBus = async function(scheduleId) {
-        if (confirm('¿Eliminar permanentemente?')) {
+        if (confirm('¿Eliminar?')) {
             await supabase.from('bus_services').delete().eq('schedule_id', scheduleId);
             cargarBuses();
             alert('Eliminado');
         }
     };
     
-    window.reactivarBus = async function(scheduleId) {
-        await supabase.from('bus_services').update({ status: 'active', delay_reason: null, new_time: null }).eq('schedule_id', scheduleId);
-        cargarBuses();
-        alert('Reactivado');
-    };
-    
     window.agregarBus = async function() {
         const company = document.getElementById('newBusCompany').value;
-        const direction = document.getElementById('newBusDirection').value;
+        const route = document.getElementById('newBusRoute').value;
         const time = document.getElementById('newBusTime').value;
         const days = document.getElementById('newBusDays').value;
-        const platform = document.getElementById('newBusPlatform').value;
-        const note = document.getElementById('newBusNote').value;
-        if (!direction || !time) { alert('Dirección y hora obligatorios'); return; }
-        const scheduleId = `new_${Date.now()}`;
+        if (!company || !route || !time) { alert('Complete campos'); return; }
+        const scheduleId = 'bus_' + Date.now();
         await supabase.from('bus_services').insert([{
-            service_name: company, route_direction: direction, schedule_id: scheduleId,
-            schedule_time: time, days: days || 'Consultar', platform: platform || 'Por definir',
-            note: note || 'Servicio agregado', status: 'active', visible: true
+            service_name: company, route_direction: route, schedule_id: scheduleId,
+            schedule_time: time, days: days || 'Consultar', platform: 'Por definir', note: '', status: 'active'
         }]);
         cargarBuses();
         alert('Agregado');
     };
     
-    window.editarHoraTren = async function(scheduleId) {
-        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
+    window.cambiarHoraTren = async function(scheduleId) {
+        const newTime = document.getElementById(`time_${scheduleId}`).value;
         if (!newTime) { alert('Ingrese hora'); return; }
         await supabase.from('train_services').update({ schedule_time: newTime }).eq('schedule_id', scheduleId);
         cargarTrenes();
@@ -908,10 +530,7 @@
     window.marcarDemoraTren = async function(scheduleId) {
         const reason = document.getElementById(`reason_${scheduleId}`).value;
         if (!reason) { alert('Ingrese motivo'); return; }
-        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
-        const updateData = { status: 'delayed', delay_reason: reason };
-        if (newTime) updateData.new_time = newTime;
-        await supabase.from('train_services').update(updateData).eq('schedule_id', scheduleId);
+        await supabase.from('train_services').update({ status: 'delayed', delay_reason: reason }).eq('schedule_id', scheduleId);
         cargarTrenes();
         alert('Demorada');
     };
@@ -925,60 +544,44 @@
     };
     
     window.eliminarTren = async function(scheduleId) {
-        if (confirm('¿Eliminar permanentemente?')) {
+        if (confirm('¿Eliminar?')) {
             await supabase.from('train_services').delete().eq('schedule_id', scheduleId);
             cargarTrenes();
             alert('Eliminado');
         }
     };
     
-    window.reactivarTren = async function(scheduleId) {
-        await supabase.from('train_services').update({ status: 'active', delay_reason: null, new_time: null }).eq('schedule_id', scheduleId);
-        cargarTrenes();
-        alert('Reactivado');
-    };
-    
     window.agregarTren = async function() {
-        const direction = document.getElementById('newTrainDirection').value;
+        const route = document.getElementById('newTrainRoute').value;
         const time = document.getElementById('newTrainTime').value;
         const days = document.getElementById('newTrainDays').value;
-        const platform = document.getElementById('newTrainPlatform').value;
-        const note = document.getElementById('newTrainNote').value;
-        if (!direction || !time) { alert('Dirección y hora obligatorios'); return; }
-        const scheduleId = `train_new_${Date.now()}`;
+        if (!route || !time) { alert('Complete campos'); return; }
+        const scheduleId = 'train_' + Date.now();
         await supabase.from('train_services').insert([{
-            train_name: 'Tren Nacional', route_direction: direction, schedule_id: scheduleId,
-            schedule_time: time, days: days || 'Consultar', platform: platform || 'Por definir',
-            note: note || 'Servicio agregado', status: 'active', visible: true
+            train_name: 'Tren Nacional', route_direction: route, schedule_id: scheduleId,
+            schedule_time: time, days: days || 'Consultar', platform: 'Por definir', note: '', status: 'active'
         }]);
         cargarTrenes();
         alert('Agregado');
     };
     
-    window.crearUsuario = async function() {
-        const username = document.getElementById('newUsername').value;
-        const password = document.getElementById('newPassword').value;
-        const name = document.getElementById('newName').value;
-        if (!username || !password || !name) { alert('Complete campos'); return; }
-        const permissions = [];
-        if (document.getElementById('permBus').checked) permissions.push('bus');
-        if (document.getElementById('permTrain').checked) permissions.push('train');
-        if (document.getElementById('permPermits').checked) permissions.push('permits');
-        if (document.getElementById('permAirport').checked) permissions.push('airport');
-        if (document.getElementById('permAccidents').checked) permissions.push('accidents');
-        if (document.getElementById('permMeetings').checked) permissions.push('meetings');
-        if (permissions.length === 0) { alert('Seleccione al menos un permiso'); return; }
-        await supabase.from('users').insert([{ username, password, name, role: 'admin', permissions }]);
-        alert(`Usuario ${username} creado`);
-        if (currentUser) renderAdminPanel();
+    window.cambiarEstadoVuelo = async function(flightId) {
+        const status = document.getElementById(`status_${flightId}`).value;
+        await supabase.from('flights').update({ status }).eq('flight_id', flightId);
+        cargarVuelos();
+        alert('Estado actualizado');
     };
     
-    window.eliminarUsuario = async function(userId) {
-        if (confirm('¿Eliminar usuario?')) {
-            await supabase.from('users').delete().eq('id', userId);
-            alert('Usuario eliminado');
-            if (currentUser) renderAdminPanel();
-        }
+    window.agregarVuelo = async function() {
+        const flightId = document.getElementById('newFlightId').value;
+        const origin = document.getElementById('newOrigin').value;
+        const dest = document.getElementById('newDest').value;
+        const time = document.getElementById('newFlightTime').value;
+        const status = document.getElementById('newFlightStatus').value;
+        if (!flightId || !origin || !dest || !time) { alert('Complete campos'); return; }
+        await supabase.from('flights').insert([{ flight_id: flightId, origin, destination: dest, scheduled_time: time, status, note: '' }]);
+        cargarVuelos();
+        alert('Agregado');
     };
     
     // ========== LOGIN ==========
@@ -990,7 +593,7 @@
     window.showLogin = function() {
         const overlay = document.createElement('div');
         overlay.className = 'login-overlay';
-        overlay.innerHTML = `<div class="login-card"><h3>🔐 Acceso Administración</h3><input type="text" id="loginUser" placeholder="Usuario"><input type="password" id="loginPass" placeholder="Contraseña"><button onclick="doLogin()">Ingresar</button><button onclick="closeLogin()" style="background:#ccc; margin-top:10px;">Cancelar</button></div>`;
+        overlay.innerHTML = `<div class="login-card"><h3>🔐 Acceso Admin</h3><input type="text" id="loginUser" placeholder="Usuario"><input type="password" id="loginPass" placeholder="Contraseña"><button onclick="doLogin()">Ingresar</button><button onclick="closeLogin()" style="background:#ccc; margin-top:10px;">Cancelar</button></div>`;
         document.body.appendChild(overlay);
     };
     
@@ -1001,50 +604,21 @@
         if (usuario) {
             currentUser = usuario;
             document.querySelector('.login-overlay').remove();
-            document.getElementById('adminPanel').style.display = 'block';
-            document.getElementById('publicContent').style.display = 'none';
-            document.getElementById('adminBtnContainer').innerHTML = `<div class="session-info"><span><i class="fas fa-user-shield"></i> ${usuario.name} (${usuario.role === 'super_admin' ? 'Super Admin' : 'Admin'})</span><button onclick="logout()">Cerrar sesión</button></div>`;
             await renderAdminPanel();
             alert(`Bienvenido ${usuario.name}`);
-        } else {
-            alert('Credenciales incorrectas');
-        }
+        } else { alert('Credenciales incorrectas'); }
     };
     
     window.closeLogin = function() { document.querySelector('.login-overlay')?.remove(); };
+    window.logout = function() { currentUser = null; document.getElementById('adminPanel').style.display = 'none'; alert('Sesión cerrada'); };
     
-    window.logout = function() {
-        currentUser = null;
-        document.getElementById('adminPanel').style.display = 'none';
-        document.getElementById('publicContent').style.display = 'block';
-        document.getElementById('adminBtnContainer').innerHTML = `<button class="admin-access-btn" onclick="showLogin()"><i class="fas fa-lock"></i> Acceso Administración</button>`;
-        alert('Sesión cerrada');
-    };
-    
-    function initTabs() {
-        const btns = { Bus: 'tabBusBtn', Train: 'tabTrainBtn', Permits: 'tabPermitsBtn', Airport: 'tabAirportBtn', Accidents: 'tabAccidentsBtn', Meetings: 'tabMeetingsBtn' };
-        const panels = { Bus: 'busPanel', Train: 'trainPanel', Permits: 'permitsPanel', Airport: 'airportPanel', Accidents: 'accidentsPanel', Meetings: 'meetingsPanel' };
-        function setActive(active) {
-            Object.keys(btns).forEach(k => { document.getElementById(btns[k])?.classList.remove('active'); document.getElementById(panels[k])?.classList.remove('active-panel'); });
-            document.getElementById(btns[active])?.classList.add('active');
-            document.getElementById(panels[active])?.classList.add('active-panel');
-        }
-        document.getElementById('tabBusBtn').onclick = () => setActive('Bus');
-        document.getElementById('tabTrainBtn').onclick = () => setActive('Train');
-        document.getElementById('tabPermitsBtn').onclick = () => setActive('Permits');
-        document.getElementById('tabAirportBtn').onclick = () => setActive('Airport');
-        document.getElementById('tabAccidentsBtn').onclick = () => setActive('Accidents');
-        document.getElementById('tabMeetingsBtn').onclick = () => setActive('Meetings');
-    }
-    
-    mostrarFecha();
+    // Iniciar
     cargarBuses();
     cargarTrenes();
     cargarPermisos();
     cargarVuelos();
     cargarAccidentes();
     cargarReuniones();
-    initTabs();
 </script>
 </body>
-</html>
+                                           </html>
