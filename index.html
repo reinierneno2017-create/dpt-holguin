@@ -6,10 +6,8 @@
     <title>DPT Holguín - Dirección Provincial de Transporte</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Supabase JS - Usando Skypack CDN (más estable) -->
-    <script src="https://cdn.skypack.dev/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ========== ESTILOS COMPLETOS (MANTENER) ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -211,7 +209,6 @@
         .status-cancelled { background: #dc3545; color: white; }
         .status-delayed { background: #fd7e14; color: white; }
         
-        /* Accidentalidad */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -249,7 +246,6 @@
             font-size: 0.85rem;
         }
         
-        /* Reuniones */
         .meeting-card {
             background: #f8faf7;
             margin-bottom: 1rem;
@@ -310,7 +306,6 @@
         .status-cancelado { background: #dc3545; color: white; }
         .status-aterrizado { background: #17a2b8; color: white; }
         
-        /* Admin Panel */
         .admin-panel-modern {
             background: white;
             border-radius: 24px;
@@ -456,7 +451,6 @@
     </div>
 </nav>
 
-<!-- CONTENIDO PÚBLICO -->
 <div id="publicContent">
     <div class="hero-modern">
         <h1>Transporte en Holguín</h1>
@@ -476,7 +470,7 @@
     </div>
 
     <div class="content-container">
-        <div id="busPanel" class="panel-modern active-panel"><div id="busGrid" class="cards-grid">Cargando datos desde Supabase...</div></div>
+        <div id="busPanel" class="panel-modern active-panel"><div id="busGrid" class="cards-grid">Cargando datos...</div></div>
         <div id="trainPanel" class="panel-modern"><div id="trainGrid" class="cards-grid">Cargando datos...</div></div>
         <div id="permitsPanel" class="panel-modern">
             <div class="permits-card-modern">
@@ -496,50 +490,29 @@
         </div>
         <div id="accidentsPanel" class="panel-modern">
             <div class="card-modern">
-                <div class="card-header-modern">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Comportamiento de la Accidentalidad</h3>
-                </div>
+                <div class="card-header-modern"><i class="fas fa-chart-line"></i><h3>Comportamiento de la Accidentalidad</h3></div>
                 <div class="card-body-modern">
-                    <div class="month-badge" id="accidentMonth"><i class="fas fa-calendar"></i> <span id="currentMonth">Cargando...</span></div>
+                    <div class="month-badge"><i class="fas fa-calendar"></i> <span id="currentMonth">Cargando...</span></div>
                     <div class="stats-grid">
-                        <div class="stat-card accidentes">
-                            <i class="fas fa-car-crash" style="font-size: 2rem; color: #dc3545;"></i>
-                            <div class="stat-number" id="accidentesCount">0</div>
-                            <div class="stat-label">Accidentes</div>
-                        </div>
-                        <div class="stat-card lesionados">
-                            <i class="fas fa-user-injured" style="font-size: 2rem; color: #fd7e14;"></i>
-                            <div class="stat-number" id="lesionadosCount">0</div>
-                            <div class="stat-label">Lesionados</div>
-                        </div>
-                        <div class="stat-card fallecidos">
-                            <i class="fas fa-skull-crossbones" style="font-size: 2rem; color: #6c757d;"></i>
-                            <div class="stat-number" id="fallecidosCount">0</div>
-                            <div class="stat-label">Fallecidos</div>
-                        </div>
+                        <div class="stat-card accidentes"><i class="fas fa-car-crash" style="font-size: 2rem; color: #dc3545;"></i><div class="stat-number" id="accidentesCount">0</div><div class="stat-label">Accidentes</div></div>
+                        <div class="stat-card lesionados"><i class="fas fa-user-injured" style="font-size: 2rem; color: #fd7e14;"></i><div class="stat-number" id="lesionadosCount">0</div><div class="stat-label">Lesionados</div></div>
+                        <div class="stat-card fallecidos"><i class="fas fa-skull-crossbones" style="font-size: 2rem; color: #6c757d;"></i><div class="stat-number" id="fallecidosCount">0</div><div class="stat-label">Fallecidos</div></div>
                     </div>
                 </div>
             </div>
         </div>
         <div id="meetingsPanel" class="panel-modern">
             <div class="card-modern">
-                <div class="card-header-modern">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Reuniones de Última Hora</h3>
-                </div>
+                <div class="card-header-modern"><i class="fas fa-calendar-alt"></i><h3>Reuniones de Última Hora</h3></div>
                 <div class="card-body-modern" id="meetingsList">Cargando reuniones...</div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Botón de Administración -->
 <div id="adminBtnContainer" style="text-align: center; margin: 1rem 2rem;">
     <button class="admin-access-btn" onclick="showLogin()"><i class="fas fa-lock"></i> Acceso Administración</button>
 </div>
-
-<!-- Panel de Administración -->
 <div id="adminPanel" class="admin-panel-modern" style="display: none;"></div>
 
 <footer class="footer-modern">
@@ -549,264 +522,475 @@
     </p>
 </footer>
 
-<button class="refresh-btn" onclick="location.reload()">
-    <i class="fas fa-sync-alt"></i>
-</button>
+<button class="refresh-btn" onclick="location.reload()"><i class="fas fa-sync-alt"></i></button>
 
 <script>
     // ========== CONFIGURACIÓN SUPABASE ==========
     const SUPABASE_URL = 'https://ywkpnyqcfklkuetcklks.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3a3BueXFjZmtsa3VldGNrbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODIyMjYsImV4cCI6MjA5MDQ1ODIyNn0.dq2GPOmL4fPRtLYfJidA_8YZBtsncQAZpk3e_U9_sFs';
 
-    // Verificar que Supabase está disponible
-    if (typeof supabase === 'undefined') {
-        console.error('Supabase no está disponible. Usando datos locales de respaldo.');
-        // Si falla, usar datos locales (fallback)
-        usarDatosLocales();
-    } else {
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        iniciarConSupabase(supabaseClient);
-    }
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentUser = null;
+    let nextScheduleId = 100;
+    let nextFlightId = 5;
+    let nextMeetingId = 4;
+    let nextUserId = 2;
     
-    // ========== DATOS LOCALES DE RESPALDO ==========
-    function usarDatosLocales() {
-        console.log('Usando datos locales de respaldo');
-        // Cargar buses
-        document.getElementById('busGrid').innerHTML = `
-            <div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>Viazul</h3></div><div class="card-body-modern"><div class="route-badge">Holguín → La Habana</div><div class="schedule-card"><div><span class="schedule-time">07:30</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div class="schedule-platform">Andén 5</div></div><div class="schedule-card"><div><span class="schedule-time">14:15</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Andén 5</div></div><div class="route-badge">La Habana → Holguín</div><div class="schedule-card"><div><span class="schedule-time">08:00</span><span class="schedule-days">Lun, Mié, Vie, Dom</span></div><div class="schedule-platform">Andén 12</div></div></div></div>
-            <div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>Astro</h3></div><div class="card-body-modern"><div class="route-badge">Holguín → La Habana</div><div class="schedule-card"><div><span class="schedule-time">06:00</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 8</div></div><div class="schedule-card"><div><span class="schedule-time">12:30</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 8</div></div><div class="schedule-card"><div><span class="schedule-time">19:45</span><span class="schedule-days">Diario</span></div><div class="schedule-platform">Andén 9</div></div></div></div>`;
-        
-        document.getElementById('trainGrid').innerHTML = `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body-modern"><div class="route-badge">Holguín → La Habana</div><div class="schedule-card"><div><span class="schedule-time">15:20</span><span class="schedule-days">Mar, Jue, Sáb</span></div><div class="schedule-platform">Estación Central</div></div><div class="route-badge">La Habana → Holguín</div><div class="schedule-card"><div><span class="schedule-time">09:30</span><span class="schedule-days">Lun, Mié, Vie</span></div><div class="schedule-platform">Estación Central</div></div></div></div>`;
-        
-        document.getElementById('permitsNumber').innerText = '47';
-        
-        document.getElementById('flightsList').innerHTML = `
-            <div class="flight-card"><div class="flight-time">08:30 | CU 801</div><div>La Habana → Holguín</div><div><span class="flight-status status-programado">Programado</span></div></div>
-            <div class="flight-card"><div class="flight-time">10:15 | CU 802</div><div>Holguín → La Habana</div><div><span class="flight-status status-programado">Programado</span></div></div>
-            <div class="flight-card"><div class="flight-time">11:45 | CU 803</div><div>Miami → Holguín</div><div><span class="flight-status status-programado">Programado</span></div></div>
-            <div class="flight-card"><div class="flight-time">17:45 | IB 323</div><div>Madrid → Holguín</div><div><span class="flight-status status-demora">Demora</span><span> Aterrizaje 19:30</span></div></div>`;
-        
-        document.getElementById('accidentesCount').innerText = '12';
-        document.getElementById('lesionadosCount').innerText = '18';
-        document.getElementById('fallecidosCount').innerText = '3';
-        document.getElementById('currentMonth').innerText = 'marzo 2026';
-        
-        document.getElementById('meetingsList').innerHTML = `
-            <div class="meeting-card"><div class="meeting-date">28 de marzo de 2026</div><div><strong>Lugar:</strong> Terminal de Ómnibus</div><div><strong>Motivo:</strong> Revisión de horarios</div></div>
-            <div class="meeting-card"><div class="meeting-date">30 de marzo de 2026</div><div><strong>Lugar:</strong> Estación Central</div><div><strong>Motivo:</strong> Mantenimiento de vías</div></div>
-            <div class="meeting-card"><div class="meeting-date">2 de abril de 2026</div><div><strong>Lugar:</strong> Aeropuerto Frank País</div><div><strong>Motivo:</strong> Coordinación con aerolíneas</div></div>`;
+    const PERMISSIONS = { BUS: 'bus', TRAIN: 'train', PERMITS: 'permits', AIRPORT: 'airport', ACCIDENTS: 'accidents', MEETINGS: 'meetings', USERS: 'users' };
+    
+    function hasPermission(permission) {
+        if (!currentUser) return false;
+        if (currentUser.role === 'super_admin') return true;
+        return currentUser.permissions && currentUser.permissions.includes(permission);
     }
     
-    // ========== FUNCIONES CON SUPABASE ==========
-    function iniciarConSupabase(supabaseClient) {
-        console.log('Conectando a Supabase...');
-        
-        async function cargarBuses() {
-            const { data, error } = await supabaseClient.from('bus_services').select('*');
-            if (error) { console.error('Error buses:', error); usarDatosLocales(); return; }
-            if (!data || data.length === 0) { usarDatosLocales(); return; }
-            
-            const grupos = {};
-            data.forEach(item => {
-                const key = `${item.service_name}|${item.route_direction}`;
-                if (!grupos[key]) grupos[key] = [];
-                grupos[key].push(item);
-            });
-            
-            let html = '';
-            for (let key in grupos) {
-                const [company, route] = key.split('|');
-                let itemsHtml = '';
-                grupos[key].forEach(item => {
-                    itemsHtml += `<div class="schedule-card"><div><span class="schedule-time">${item.schedule_time}</span><span class="schedule-days">${item.days}</span></div><div class="schedule-platform">${item.platform}</div><div class="schedule-note">${item.note || ''}</div></div>`;
-                });
-                html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>${company}</h3></div><div class="card-body-modern"><div class="route-badge">${route}</div>${itemsHtml}</div></div>`;
-            }
-            document.getElementById('busGrid').innerHTML = html;
-        }
-        
-        async function cargarTrenes() {
-            const { data, error } = await supabaseClient.from('train_services').select('*');
-            if (error) { console.error('Error trenes:', error); return; }
-            if (!data || data.length === 0) return;
-            
-            let html = '';
-            data.forEach(item => {
-                html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body-modern"><div class="route-badge">${item.route_direction}</div><div class="schedule-card"><div><span class="schedule-time">${item.schedule_time}</span><span class="schedule-days">${item.days}</span></div><div class="schedule-platform">${item.platform}</div><div class="schedule-note">${item.note || ''}</div></div></div></div>`;
-            });
-            document.getElementById('trainGrid').innerHTML = html;
-        }
-        
-        async function cargarPermisos() {
-            const { data, error } = await supabaseClient.from('permits_config').select('permit_count').single();
-            if (!error && data) document.getElementById('permitsNumber').innerText = data.permit_count;
-        }
-        
-        async function cargarVuelos() {
-            const { data, error } = await supabaseClient.from('flights').select('*');
-            if (error) { console.error('Error vuelos:', error); return; }
-            if (!data || data.length === 0) return;
-            
-            let html = '';
-            data.forEach(item => {
-                let bgColor = item.status === 'Programado' ? '#28a745' : (item.status === 'Demora' ? '#fd7e14' : '#dc3545');
-                html += `<div class="flight-card"><div class="flight-time">${item.scheduled_time} | ${item.flight_id}</div><div>${item.origin} → ${item.destination}</div><div><span class="flight-status" style="background:${bgColor}; color:white;">${item.status}</span>${item.note ? `<span> ${item.note}</span>` : ''}</div></div>`;
-            });
-            document.getElementById('flightsList').innerHTML = html;
-        }
-        
-        async function cargarAccidentes() {
-            const { data, error } = await supabaseClient.from('accidents_data').select('*').single();
-            if (!error && data) {
-                document.getElementById('accidentesCount').innerText = data.accidents;
-                document.getElementById('lesionadosCount').innerText = data.injured;
-                document.getElementById('fallecidosCount').innerText = data.deceased;
-                document.getElementById('currentMonth').innerText = data.month;
-            }
-        }
-        
-        async function cargarReuniones() {
-            const { data, error } = await supabaseClient.from('meetings').select('*').order('date', { ascending: false });
-            if (error) { console.error('Error reuniones:', error); return; }
-            if (!data || data.length === 0) return;
-            
-            let html = '';
-            data.forEach(item => {
-                const fecha = new Date(item.date);
-                const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-                html += `<div class="meeting-card"><div class="meeting-date">${fechaStr}</div><div><strong>Lugar:</strong> ${item.place}</div><div><strong>Motivo:</strong> ${item.reason}</div></div>`;
-            });
-            document.getElementById('meetingsList').innerHTML = html;
-        }
-        
-        // Ejecutar cargas
-        cargarBuses();
-        cargarTrenes();
-        cargarPermisos();
-        cargarVuelos();
-        cargarAccidentes();
-        cargarReuniones();
-    }
-    
-    // ========== FUNCIONES COMUNES ==========
     function mostrarFecha() {
         const fecha = new Date();
-        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').innerText = fecha.toLocaleDateString('es-ES', opciones);
+        document.getElementById('currentDate').innerText = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('currentMonth').innerText = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
     }
     
-    // Datos locales para admin
-    let meetingsData = [
-        { id: 1, date: "2026-03-28", place: "Terminal de Ómnibus", reason: "Revisión de horarios de verano" },
-        { id: 2, date: "2026-03-30", place: "Estación Central de Trenes", reason: "Mantenimiento de vías" },
-        { id: 3, date: "2026-04-02", place: "Aeropuerto Frank País", reason: "Coordinación con aerolíneas" }
-    ];
-    let permitsCount = 47;
-    
-    function renderAdminPanel() {
-        if (!currentUser) return;
-        let html = `<div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h3>Panel Admin - ${currentUser.name}</h3>
-            <button onclick="logout()" style="background:#dc3545; color:white; border:none; padding:8px 15px; border-radius:30px;">Cerrar</button>
-        </div>`;
+    // ========== FUNCIONES DE CARGA ==========
+    async function cargarBuses() {
+        const { data, error } = await supabase.from('bus_services').select('*');
+        if (error) { console.error(error); document.getElementById('busGrid').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
+        if (!data || data.length === 0) { document.getElementById('busGrid').innerHTML = '<div style="text-align:center;padding:20px;">No hay datos</div>'; return; }
         
-        html += `<div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:15px;">
-            <h4>📄 Permisos Excepcionales</h4>
-            <input type="number" id="permitsInput" value="${permitsCount}" style="width:100px; padding:5px;">
-            <button onclick="actualizarPermisos()" class="btn-edit">Actualizar</button>
-        </div>`;
-        
-        html += `<div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:15px;">
-            <h4>📅 Reuniones</h4>`;
-        meetingsData.forEach(m => {
-            html += `<div style="background:white; padding:10px; margin-bottom:8px; border-radius:12px;">
-                <strong>${m.date}</strong> - ${m.place}<br>
-                <input type="text" id="meetingPlace_${m.id}" value="${m.place}" style="width:150px;">
-                <input type="text" id="meetingReason_${m.id}" value="${m.reason}" style="width:200px;">
-                <button onclick="actualizarReunion(${m.id})" class="btn-edit">Actualizar</button>
-                <button onclick="eliminarReunion(${m.id})" class="btn-delete">Eliminar</button>
-            </div>`;
+        const grupos = {};
+        data.forEach(item => {
+            const key = `${item.service_name}|${item.route_direction}`;
+            if (!grupos[key]) grupos[key] = [];
+            grupos[key].push(item);
         });
-        html += `<div style="margin-top:10px;">
-            <input type="date" id="newMeetingDate" style="width:130px;">
-            <input type="text" id="newMeetingPlace" placeholder="Lugar" style="width:120px;">
-            <input type="text" id="newMeetingReason" placeholder="Motivo" style="width:150px;">
-            <button onclick="agregarReunion()" class="btn-add">Agregar</button>
-        </div></div>`;
+        
+        let html = '';
+        for (let key in grupos) {
+            const [company, route] = key.split('|');
+            let itemsHtml = '';
+            grupos[key].forEach(item => {
+                let statusClass = '', statusBadge = '', displayTime = item.schedule_time;
+                if (item.status === 'cancelled') {
+                    statusClass = 'cancelled';
+                    statusBadge = '<span class="status-badge status-cancelled"><i class="fas fa-times-circle"></i> CANCELADO</span>';
+                } else if (item.status === 'delayed') {
+                    statusClass = 'delayed';
+                    displayTime = item.new_time ? `${item.new_time} (Original: ${item.schedule_time})` : item.schedule_time;
+                    statusBadge = '<span class="status-badge status-delayed"><i class="fas fa-clock"></i> DEMORADO</span>';
+                }
+                let reasonHtml = (item.status === 'cancelled' || item.status === 'delayed') && item.delay_reason ? `<div style="margin-top:5px; font-size:0.7rem; color:#b33;">📌 ${item.delay_reason}</div>` : '';
+                itemsHtml += `<div class="schedule-card ${statusClass}"><div><span class="schedule-time">${displayTime}</span><span class="schedule-days">${item.days}</span>${statusBadge}</div><div class="schedule-platform"><i class="fas fa-map-marker-alt"></i> ${item.platform}</div><div class="schedule-note">${item.note || ''} ${reasonHtml}</div></div>`;
+            });
+            html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-bus"></i><h3>${company}</h3></div><div class="card-body-modern"><div class="route-badge"><i class="fas fa-arrow-right"></i> ${route}</div>${itemsHtml}</div></div>`;
+        }
+        document.getElementById('busGrid').innerHTML = html;
+    }
+    
+    async function cargarTrenes() {
+        const { data, error } = await supabase.from('train_services').select('*');
+        if (error) { console.error(error); document.getElementById('trainGrid').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
+        if (!data || data.length === 0) { document.getElementById('trainGrid').innerHTML = '<div style="text-align:center;padding:20px;">No hay datos</div>'; return; }
+        
+        let html = '';
+        data.forEach(item => {
+            let statusClass = '', statusBadge = '', displayTime = item.schedule_time;
+            if (item.status === 'cancelled') {
+                statusClass = 'cancelled';
+                statusBadge = '<span class="status-badge status-cancelled"><i class="fas fa-times-circle"></i> CANCELADO</span>';
+            } else if (item.status === 'delayed') {
+                statusClass = 'delayed';
+                displayTime = item.new_time ? `${item.new_time} (Original: ${item.schedule_time})` : item.schedule_time;
+                statusBadge = '<span class="status-badge status-delayed"><i class="fas fa-clock"></i> DEMORADO</span>';
+            }
+            let reasonHtml = (item.status === 'cancelled' || item.status === 'delayed') && item.delay_reason ? `<div style="margin-top:5px; font-size:0.7rem; color:#b33;">📌 ${item.delay_reason}</div>` : '';
+            html += `<div class="card-modern"><div class="card-header-modern"><i class="fas fa-train"></i><h3>Tren Nacional</h3></div><div class="card-body-modern"><div class="route-badge">${item.route_direction}</div><div class="schedule-card ${statusClass}"><div><span class="schedule-time">${displayTime}</span><span class="schedule-days">${item.days}</span>${statusBadge}</div><div class="schedule-platform"><i class="fas fa-map-marker-alt"></i> ${item.platform}</div><div class="schedule-note">${item.note || ''} ${reasonHtml}</div></div></div></div>`;
+        });
+        document.getElementById('trainGrid').innerHTML = html;
+    }
+    
+    async function cargarPermisos() {
+        const { data, error } = await supabase.from('permits_config').select('permit_count').single();
+        if (!error && data) document.getElementById('permitsNumber').innerText = data.permit_count;
+        else document.getElementById('permitsNumber').innerText = '47';
+    }
+    
+    async function cargarVuelos() {
+        const { data, error } = await supabase.from('flights').select('*');
+        if (error) { console.error(error); document.getElementById('flightsList').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
+        if (!data || data.length === 0) { document.getElementById('flightsList').innerHTML = '<div style="text-align:center;padding:20px;">No hay vuelos</div>'; return; }
+        
+        let html = '';
+        data.forEach(item => {
+            let bgColor = item.status === 'Programado' ? '#28a745' : (item.status === 'Demora' ? '#fd7e14' : '#dc3545');
+            html += `<div class="flight-card"><div class="flight-time"><i class="fas fa-clock"></i> ${item.scheduled_time} | ${item.flight_id}</div><div><i class="fas fa-map-marker-alt"></i> ${item.origin} → ${item.destination}</div><div><span class="flight-status" style="background:${bgColor}; color:white;">${item.status}</span>${item.note ? `<span style="margin-left:10px;">${item.note}</span>` : ''}</div></div>`;
+        });
+        document.getElementById('flightsList').innerHTML = html;
+    }
+    
+    async function cargarAccidentes() {
+        const { data, error } = await supabase.from('accidents_data').select('*').single();
+        if (!error && data) {
+            document.getElementById('accidentesCount').innerText = data.accidents;
+            document.getElementById('lesionadosCount').innerText = data.injured;
+            document.getElementById('fallecidosCount').innerText = data.deceased;
+            document.getElementById('currentMonth').innerText = data.month;
+        }
+    }
+    
+    async function cargarReuniones() {
+        const { data, error } = await supabase.from('meetings').select('*').order('date', { ascending: false });
+        if (error) { console.error(error); document.getElementById('meetingsList').innerHTML = '<div style="text-align:center;padding:20px;">Error cargando datos</div>'; return; }
+        if (!data || data.length === 0) { document.getElementById('meetingsList').innerHTML = '<p>No hay reuniones programadas</p>'; return; }
+        
+        let html = '';
+        data.forEach(item => {
+            const fecha = new Date(item.date);
+            const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+            html += `<div class="meeting-card"><div class="meeting-date"><i class="fas fa-calendar-day"></i> ${fechaStr}</div><div><i class="fas fa-map-marker-alt"></i> <strong>Lugar:</strong> ${item.place}</div><div><i class="fas fa-comment-dots"></i> <strong>Motivo:</strong> ${item.reason}</div></div>`;
+        });
+        document.getElementById('meetingsList').innerHTML = html;
+    }
+    
+    async function cargarUsuarios() {
+        const { data, error } = await supabase.from('users').select('*');
+        if (error) return [];
+        return data || [];
+    }
+    
+    // ========== ADMIN PANEL COMPLETO ==========
+    async function renderAdminPanel() {
+        if (!currentUser) return;
+        
+        const { data: buses } = await supabase.from('bus_services').select('*');
+        const { data: trains } = await supabase.from('train_services').select('*');
+        const { data: flights } = await supabase.from('flights').select('*');
+        const { data: permits } = await supabase.from('permits_config').select('permit_count').single();
+        const { data: accidents } = await supabase.from('accidents_data').select('*').single();
+        const { data: meetings } = await supabase.from('meetings').select('*');
+        const usersData = await cargarUsuarios();
+        
+        let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+            <h3><i class="fas fa-tools"></i> Panel de Administración - ${currentUser.name}</h3>
+            <button onclick="logout()" style="background:#dc3545; color:white; border:none; padding:0.5rem 1rem; border-radius:30px;">Cerrar sesión</button>
+        </div>`;
+        
+        // Gestión de Usuarios
+        if (hasPermission(PERMISSIONS.USERS)) {
+            html += `<div class="admin-section"><h4><i class="fas fa-users"></i> Gestión de Administradores</h4>`;
+            for (let user of usersData) {
+                html += `<div class="user-card"><strong>${user.name}</strong> (${user.username})${user.role === 'super_admin' ? '<span class="permission-tag" style="background:#ffd966;">Super Admin</span>' : ''}<div>Permisos: ${user.permissions?.map(p => ({bus:'🚌',train:'🚆',permits:'📄',airport:'✈️',accidents:'📊',meetings:'📅'}[p] || p).join(', ') || 'Ninguno'}</div>${user.role !== 'super_admin' ? `<button class="btn-cancel" onclick="eliminarUsuario(${user.id})">Eliminar</button>` : ''}</div>`;
+            }
+            html += `<div class="add-form"><h5>Crear administrador</h5>
+                <input type="text" id="newUsername" placeholder="Usuario"><input type="password" id="newPassword" placeholder="Contraseña"><input type="text" id="newName" placeholder="Nombre">
+                <div><label><input type="checkbox" id="permBus"> 🚌</label><label><input type="checkbox" id="permTrain"> 🚆</label><label><input type="checkbox" id="permPermits"> 📄</label><label><input type="checkbox" id="permAirport"> ✈️</label><label><input type="checkbox" id="permAccidents"> 📊</label><label><input type="checkbox" id="permMeetings"> 📅</label></div>
+                <button class="btn-add" onclick="crearUsuario()">Crear</button>
+            </div></div>`;
+        }
+        
+        // Permisos Excepcionales
+        if (hasPermission(PERMISSIONS.PERMITS)) {
+            html += `<div class="admin-section"><h4>📄 Permisos Excepcionales</h4><input type="number" id="permitsInput" value="${permits?.permit_count || 47}" style="width:100px;"><button class="btn-edit" onclick="actualizarPermisos()">Actualizar</button></div>`;
+        }
+        
+        // Accidentalidad
+        if (hasPermission(PERMISSIONS.ACCIDENTS)) {
+            html += `<div class="admin-section"><h4>📊 Accidentalidad</h4>
+                <label>Mes:</label><input type="text" id="accidentMonthInput" value="${accidents?.month || ''}"><br>
+                <label>Accidentes:</label><input type="number" id="accidentsInput" value="${accidents?.accidents || 0}"><br>
+                <label>Lesionados:</label><input type="number" id="injuredInput" value="${accidents?.injured || 0}"><br>
+                <label>Fallecidos:</label><input type="number" id="deceasedInput" value="${accidents?.deceased || 0}"><br>
+                <button class="btn-add" onclick="actualizarAccidentes()">Actualizar</button>
+            </div>`;
+        }
+        
+        // Reuniones
+        if (hasPermission(PERMISSIONS.MEETINGS)) {
+            html += `<div class="admin-section"><h4>📅 Reuniones</h4>`;
+            for (let m of meetings || []) {
+                html += `<div class="schedule-edit-item"><strong>${m.date}</strong> - ${m.place}<br>
+                    <input type="text" id="meetingPlace_${m.id}" value="${m.place}"><input type="text" id="meetingReason_${m.id}" value="${m.reason}">
+                    <button class="btn-edit" onclick="actualizarReunion(${m.id})">Actualizar</button>
+                    <button class="btn-delete" onclick="eliminarReunion(${m.id})">Eliminar</button>
+                </div>`;
+            }
+            html += `<div class="add-form"><input type="date" id="newMeetingDate"><input type="text" id="newMeetingPlace" placeholder="Lugar"><input type="text" id="newMeetingReason" placeholder="Motivo"><button class="btn-add" onclick="agregarReunion()">Agregar</button></div></div>`;
+        }
+        
+        // Vuelos
+        if (hasPermission(PERMISSIONS.AIRPORT)) {
+            html += `<div class="admin-section"><h4>✈️ Vuelos</h4>`;
+            for (let f of flights || []) {
+                html += `<div class="schedule-edit-item"><strong>${f.flight_id}</strong> - ${f.origin} → ${f.destination}<br>
+                    <select id="status_${f.flight_id}"><option ${f.status === 'Programado' ? 'selected' : ''}>Programado</option><option ${f.status === 'Demora' ? 'selected' : ''}>Demora</option><option ${f.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option></select>
+                    <input type="text" id="note_${f.flight_id}" value="${f.note || ''}" placeholder="Nota">
+                    <button class="btn-edit" onclick="actualizarVuelo('${f.flight_id}')">Actualizar</button>
+                    <button class="btn-delete" onclick="eliminarVuelo('${f.flight_id}')">Eliminar</button>
+                </div>`;
+            }
+            html += `<div class="add-form"><input type="text" id="newFlightId" placeholder="ID"><input type="text" id="newOrigin" placeholder="Origen"><input type="text" id="newDestination" placeholder="Destino"><input type="text" id="newFlightTime" placeholder="Hora"><select id="newFlightStatus"><option>Programado</option><option>Demora</option><option>Cancelado</option></select><button class="btn-add" onclick="agregarVuelo()">Agregar</button></div></div>`;
+        }
+        
+        // Ómnibus
+        if (hasPermission(PERMISSIONS.BUS)) {
+            html += `<div class="admin-section"><h4>🚌 Ómnibus</h4>`;
+            for (let s of buses || []) {
+                html += `<div class="schedule-edit-item"><strong>${s.service_name}</strong> - ${s.route_direction}<br>Horario: ${s.schedule_time}<br>
+                    <input type="text" id="newTime_${s.schedule_id}" placeholder="Nueva hora"><input type="text" id="reason_${s.schedule_id}" placeholder="Motivo">
+                    <button class="btn-edit" onclick="editarHoraBus('${s.schedule_id}')">Hora</button>
+                    <button class="btn-delay" onclick="marcarDemoraBus('${s.schedule_id}')">Demora</button>
+                    <button class="btn-cancel" onclick="marcarCancelacionBus('${s.schedule_id}')">Cancelar</button>
+                    <button class="btn-delete" onclick="eliminarBus('${s.schedule_id}')">Eliminar</button>
+                    <button class="btn-edit" onclick="reactivarBus('${s.schedule_id}')" style="background:#28a745;">Reactivar</button>
+                </div>`;
+            }
+            html += `<div class="add-form"><select id="newBusCompany"><option>Viazul</option><option>Astro</option></select><input type="text" id="newBusDirection" placeholder="Dirección"><input type="text" id="newBusTime" placeholder="Hora"><input type="text" id="newBusDays" placeholder="Días"><input type="text" id="newBusPlatform" placeholder="Andén"><input type="text" id="newBusNote" placeholder="Nota"><button class="btn-add" onclick="agregarBus()">Agregar</button></div></div>`;
+        }
+        
+        // Tren
+        if (hasPermission(PERMISSIONS.TRAIN)) {
+            html += `<div class="admin-section"><h4>🚆 Tren</h4>`;
+            for (let s of trains || []) {
+                html += `<div class="schedule-edit-item"><strong>${s.route_direction}</strong><br>Horario: ${s.schedule_time}<br>
+                    <input type="text" id="newTime_${s.schedule_id}" placeholder="Nueva hora"><input type="text" id="reason_${s.schedule_id}" placeholder="Motivo">
+                    <button class="btn-edit" onclick="editarHoraTren('${s.schedule_id}')">Hora</button>
+                    <button class="btn-delay" onclick="marcarDemoraTren('${s.schedule_id}')">Demora</button>
+                    <button class="btn-cancel" onclick="marcarCancelacionTren('${s.schedule_id}')">Cancelar</button>
+                    <button class="btn-delete" onclick="eliminarTren('${s.schedule_id}')">Eliminar</button>
+                    <button class="btn-edit" onclick="reactivarTren('${s.schedule_id}')" style="background:#28a745;">Reactivar</button>
+                </div>`;
+            }
+            html += `<div class="add-form"><input type="text" id="newTrainDirection" placeholder="Dirección"><input type="text" id="newTrainTime" placeholder="Hora"><input type="text" id="newTrainDays" placeholder="Días"><input type="text" id="newTrainPlatform" placeholder="Andén"><input type="text" id="newTrainNote" placeholder="Nota"><button class="btn-add" onclick="agregarTren()">Agregar</button></div></div>`;
+        }
         
         document.getElementById('adminPanel').innerHTML = html;
         document.getElementById('adminPanel').style.display = 'block';
     }
     
-    function actualizarVistaReuniones() {
-        const meetingsList = document.getElementById('meetingsList');
-        if (!meetingsList) return;
-        let html = '';
-        meetingsData.forEach(item => {
-            const fecha = new Date(item.date);
-            const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-            html += `<div class="meeting-card"><div class="meeting-date">${fechaStr}</div><div><strong>Lugar:</strong> ${item.place}</div><div><strong>Motivo:</strong> ${item.reason}</div></div>`;
-        });
-        meetingsList.innerHTML = html;
-    }
-    
-    window.actualizarPermisos = function() {
-        permitsCount = parseInt(document.getElementById('permitsInput').value);
-        document.getElementById('permitsNumber').innerText = permitsCount;
-        alert('Permisos actualizados');
+    // ========== FUNCIONES ADMIN ==========
+    window.actualizarPermisos = async function() {
+        const val = parseInt(document.getElementById('permitsInput').value);
+        await supabase.from('permits_config').update({ permit_count: val }).eq('id', 1);
+        cargarPermisos();
+        alert('Actualizado');
     };
     
-    window.actualizarReunion = function(id) {
+    window.actualizarAccidentes = async function() {
+        const month = document.getElementById('accidentMonthInput').value;
+        const accidents = parseInt(document.getElementById('accidentsInput').value);
+        const injured = parseInt(document.getElementById('injuredInput').value);
+        const deceased = parseInt(document.getElementById('deceasedInput').value);
+        await supabase.from('accidents_data').update({ month, accidents, injured, deceased }).eq('id', 1);
+        cargarAccidentes();
+        alert('Actualizado');
+    };
+    
+    window.actualizarReunion = async function(id) {
         const place = document.getElementById(`meetingPlace_${id}`).value;
         const reason = document.getElementById(`meetingReason_${id}`).value;
-        const meeting = meetingsData.find(m => m.id === id);
-        if (meeting) {
-            meeting.place = place;
-            meeting.reason = reason;
-            alert('Reunión actualizada');
-            renderAdminPanel();
-            actualizarVistaReuniones();
+        await supabase.from('meetings').update({ place, reason }).eq('id', id);
+        cargarReuniones();
+        alert('Actualizado');
+    };
+    
+    window.eliminarReunion = async function(id) {
+        if (confirm('¿Eliminar?')) {
+            await supabase.from('meetings').delete().eq('id', id);
+            cargarReuniones();
+            alert('Eliminado');
         }
     };
     
-    window.eliminarReunion = function(id) {
-        if (confirm('¿Eliminar esta reunión?')) {
-            const index = meetingsData.findIndex(m => m.id === id);
-            if (index !== -1) meetingsData.splice(index, 1);
-            alert('Reunión eliminada');
-            renderAdminPanel();
-            actualizarVistaReuniones();
-        }
-    };
-    
-    window.agregarReunion = function() {
+    window.agregarReunion = async function() {
         const date = document.getElementById('newMeetingDate').value;
         const place = document.getElementById('newMeetingPlace').value;
         const reason = document.getElementById('newMeetingReason').value;
-        if (!date || !place || !reason) { alert('Complete todos los campos'); return; }
-        const newId = meetingsData.length + 1;
-        meetingsData.push({ id: newId, date: date, place: place, reason: reason });
-        alert('Reunión agregada');
-        renderAdminPanel();
-        actualizarVistaReuniones();
-        document.getElementById('newMeetingDate').value = '';
-        document.getElementById('newMeetingPlace').value = '';
-        document.getElementById('newMeetingReason').value = '';
+        if (!date || !place || !reason) { alert('Complete campos'); return; }
+        await supabase.from('meetings').insert([{ date, place, reason }]);
+        cargarReuniones();
+        alert('Agregado');
     };
     
-    async function login(username, password) {
-        if (username === 'admin' && password === 'transporte2026') {
-            return { name: 'Super Administrador', role: 'super_admin' };
+    window.actualizarVuelo = async function(flightId) {
+        const status = document.getElementById(`status_${flightId}`).value;
+        const note = document.getElementById(`note_${flightId}`).value;
+        await supabase.from('flights').update({ status, note }).eq('flight_id', flightId);
+        cargarVuelos();
+        alert('Actualizado');
+    };
+    
+    window.eliminarVuelo = async function(flightId) {
+        if (confirm('¿Eliminar vuelo?')) {
+            await supabase.from('flights').delete().eq('flight_id', flightId);
+            cargarVuelos();
+            alert('Eliminado');
         }
-        return null;
+    };
+    
+    window.agregarVuelo = async function() {
+        const flightId = document.getElementById('newFlightId').value;
+        const origin = document.getElementById('newOrigin').value;
+        const destination = document.getElementById('newDestination').value;
+        const time = document.getElementById('newFlightTime').value;
+        const status = document.getElementById('newFlightStatus').value;
+        if (!flightId || !origin || !destination || !time) { alert('Complete campos'); return; }
+        await supabase.from('flights').insert([{ flight_id: flightId, origin, destination, scheduled_time: time, status, note: '' }]);
+        cargarVuelos();
+        alert('Agregado');
+    };
+    
+    window.editarHoraBus = async function(scheduleId) {
+        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
+        if (!newTime) { alert('Ingrese hora'); return; }
+        await supabase.from('bus_services').update({ schedule_time: newTime }).eq('schedule_id', scheduleId);
+        cargarBuses();
+        alert('Horario actualizado');
+    };
+    
+    window.marcarDemoraBus = async function(scheduleId) {
+        const reason = document.getElementById(`reason_${scheduleId}`).value;
+        if (!reason) { alert('Ingrese motivo'); return; }
+        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
+        const updateData = { status: 'delayed', delay_reason: reason };
+        if (newTime) updateData.new_time = newTime;
+        await supabase.from('bus_services').update(updateData).eq('schedule_id', scheduleId);
+        cargarBuses();
+        alert('Demorada');
+    };
+    
+    window.marcarCancelacionBus = async function(scheduleId) {
+        const reason = document.getElementById(`reason_${scheduleId}`).value;
+        if (!reason) { alert('Ingrese motivo'); return; }
+        await supabase.from('bus_services').update({ status: 'cancelled', delay_reason: reason }).eq('schedule_id', scheduleId);
+        cargarBuses();
+        alert('Cancelada');
+    };
+    
+    window.eliminarBus = async function(scheduleId) {
+        if (confirm('¿Eliminar permanentemente?')) {
+            await supabase.from('bus_services').delete().eq('schedule_id', scheduleId);
+            cargarBuses();
+            alert('Eliminado');
+        }
+    };
+    
+    window.reactivarBus = async function(scheduleId) {
+        await supabase.from('bus_services').update({ status: 'active', delay_reason: null, new_time: null }).eq('schedule_id', scheduleId);
+        cargarBuses();
+        alert('Reactivado');
+    };
+    
+    window.agregarBus = async function() {
+        const company = document.getElementById('newBusCompany').value;
+        const direction = document.getElementById('newBusDirection').value;
+        const time = document.getElementById('newBusTime').value;
+        const days = document.getElementById('newBusDays').value;
+        const platform = document.getElementById('newBusPlatform').value;
+        const note = document.getElementById('newBusNote').value;
+        if (!direction || !time) { alert('Dirección y hora obligatorios'); return; }
+        const scheduleId = `new_${Date.now()}`;
+        await supabase.from('bus_services').insert([{
+            service_name: company, route_direction: direction, schedule_id: scheduleId,
+            schedule_time: time, days: days || 'Consultar', platform: platform || 'Por definir',
+            note: note || 'Servicio agregado', status: 'active', visible: true
+        }]);
+        cargarBuses();
+        alert('Agregado');
+    };
+    
+    window.editarHoraTren = async function(scheduleId) {
+        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
+        if (!newTime) { alert('Ingrese hora'); return; }
+        await supabase.from('train_services').update({ schedule_time: newTime }).eq('schedule_id', scheduleId);
+        cargarTrenes();
+        alert('Horario actualizado');
+    };
+    
+    window.marcarDemoraTren = async function(scheduleId) {
+        const reason = document.getElementById(`reason_${scheduleId}`).value;
+        if (!reason) { alert('Ingrese motivo'); return; }
+        const newTime = document.getElementById(`newTime_${scheduleId}`).value;
+        const updateData = { status: 'delayed', delay_reason: reason };
+        if (newTime) updateData.new_time = newTime;
+        await supabase.from('train_services').update(updateData).eq('schedule_id', scheduleId);
+        cargarTrenes();
+        alert('Demorada');
+    };
+    
+    window.marcarCancelacionTren = async function(scheduleId) {
+        const reason = document.getElementById(`reason_${scheduleId}`).value;
+        if (!reason) { alert('Ingrese motivo'); return; }
+        await supabase.from('train_services').update({ status: 'cancelled', delay_reason: reason }).eq('schedule_id', scheduleId);
+        cargarTrenes();
+        alert('Cancelada');
+    };
+    
+    window.eliminarTren = async function(scheduleId) {
+        if (confirm('¿Eliminar permanentemente?')) {
+            await supabase.from('train_services').delete().eq('schedule_id', scheduleId);
+            cargarTrenes();
+            alert('Eliminado');
+        }
+    };
+    
+    window.reactivarTren = async function(scheduleId) {
+        await supabase.from('train_services').update({ status: 'active', delay_reason: null, new_time: null }).eq('schedule_id', scheduleId);
+        cargarTrenes();
+        alert('Reactivado');
+    };
+    
+    window.agregarTren = async function() {
+        const direction = document.getElementById('newTrainDirection').value;
+        const time = document.getElementById('newTrainTime').value;
+        const days = document.getElementById('newTrainDays').value;
+        const platform = document.getElementById('newTrainPlatform').value;
+        const note = document.getElementById('newTrainNote').value;
+        if (!direction || !time) { alert('Dirección y hora obligatorios'); return; }
+        const scheduleId = `train_new_${Date.now()}`;
+        await supabase.from('train_services').insert([{
+            train_name: 'Tren Nacional', route_direction: direction, schedule_id: scheduleId,
+            schedule_time: time, days: days || 'Consultar', platform: platform || 'Por definir',
+            note: note || 'Servicio agregado', status: 'active', visible: true
+        }]);
+        cargarTrenes();
+        alert('Agregado');
+    };
+    
+    window.crearUsuario = async function() {
+        const username = document.getElementById('newUsername').value;
+        const password = document.getElementById('newPassword').value;
+        const name = document.getElementById('newName').value;
+        if (!username || !password || !name) { alert('Complete campos'); return; }
+        const permissions = [];
+        if (document.getElementById('permBus').checked) permissions.push('bus');
+        if (document.getElementById('permTrain').checked) permissions.push('train');
+        if (document.getElementById('permPermits').checked) permissions.push('permits');
+        if (document.getElementById('permAirport').checked) permissions.push('airport');
+        if (document.getElementById('permAccidents').checked) permissions.push('accidents');
+        if (document.getElementById('permMeetings').checked) permissions.push('meetings');
+        if (permissions.length === 0) { alert('Seleccione al menos un permiso'); return; }
+        await supabase.from('users').insert([{ username, password, name, role: 'admin', permissions }]);
+        alert(`Usuario ${username} creado`);
+        if (currentUser) renderAdminPanel();
+    };
+    
+    window.eliminarUsuario = async function(userId) {
+        if (confirm('¿Eliminar usuario?')) {
+            await supabase.from('users').delete().eq('id', userId);
+            alert('Usuario eliminado');
+            if (currentUser) renderAdminPanel();
+        }
+    };
+    
+    // ========== LOGIN ==========
+    async function login(username, password) {
+        const { data, error } = await supabase.from('users').select('*').eq('username', username).eq('password', password).single();
+        return data;
     }
     
     window.showLogin = function() {
         const overlay = document.createElement('div');
         overlay.className = 'login-overlay';
-        overlay.innerHTML = `<div class="login-card"><h3>🔐 Acceso Admin</h3><input type="text" id="loginUser" placeholder="Usuario"><input type="password" id="loginPass" placeholder="Contraseña"><button onclick="doLogin()">Ingresar</button><button onclick="closeLogin()" style="background:#ccc; margin-top:10px;">Cancelar</button></div>`;
+        overlay.innerHTML = `<div class="login-card"><h3>🔐 Acceso Administración</h3><input type="text" id="loginUser" placeholder="Usuario"><input type="password" id="loginPass" placeholder="Contraseña"><button onclick="doLogin()">Ingresar</button><button onclick="closeLogin()" style="background:#ccc; margin-top:10px;">Cancelar</button></div>`;
         document.body.appendChild(overlay);
     };
     
@@ -819,8 +1003,8 @@
             document.querySelector('.login-overlay').remove();
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('publicContent').style.display = 'none';
-            document.getElementById('adminBtnContainer').innerHTML = `<div class="session-info"><span><i class="fas fa-user-shield"></i> ${usuario.name} (Super Admin)</span><button onclick="logout()">Cerrar sesión</button></div>`;
-            renderAdminPanel();
+            document.getElementById('adminBtnContainer').innerHTML = `<div class="session-info"><span><i class="fas fa-user-shield"></i> ${usuario.name} (${usuario.role === 'super_admin' ? 'Super Admin' : 'Admin'})</span><button onclick="logout()">Cerrar sesión</button></div>`;
+            await renderAdminPanel();
             alert(`Bienvenido ${usuario.name}`);
         } else {
             alert('Credenciales incorrectas');
@@ -838,38 +1022,29 @@
     };
     
     function initTabs() {
-        const btns = {
-            Bus: document.getElementById('tabBusBtn'),
-            Train: document.getElementById('tabTrainBtn'),
-            Permits: document.getElementById('tabPermitsBtn'),
-            Airport: document.getElementById('tabAirportBtn'),
-            Accidents: document.getElementById('tabAccidentsBtn'),
-            Meetings: document.getElementById('tabMeetingsBtn')
-        };
-        const panels = {
-            Bus: document.getElementById('busPanel'),
-            Train: document.getElementById('trainPanel'),
-            Permits: document.getElementById('permitsPanel'),
-            Airport: document.getElementById('airportPanel'),
-            Accidents: document.getElementById('accidentsPanel'),
-            Meetings: document.getElementById('meetingsPanel')
-        };
+        const btns = { Bus: 'tabBusBtn', Train: 'tabTrainBtn', Permits: 'tabPermitsBtn', Airport: 'tabAirportBtn', Accidents: 'tabAccidentsBtn', Meetings: 'tabMeetingsBtn' };
+        const panels = { Bus: 'busPanel', Train: 'trainPanel', Permits: 'permitsPanel', Airport: 'airportPanel', Accidents: 'accidentsPanel', Meetings: 'meetingsPanel' };
         function setActive(active) {
-            Object.keys(btns).forEach(k => { if(btns[k]) btns[k].classList.remove('active'); if(panels[k]) panels[k].classList.remove('active-panel'); });
-            if(btns[active]) btns[active].classList.add('active');
-            if(panels[active]) panels[active].classList.add('active-panel');
+            Object.keys(btns).forEach(k => { document.getElementById(btns[k])?.classList.remove('active'); document.getElementById(panels[k])?.classList.remove('active-panel'); });
+            document.getElementById(btns[active])?.classList.add('active');
+            document.getElementById(panels[active])?.classList.add('active-panel');
         }
-        if(btns.Bus) btns.Bus.onclick = () => setActive('Bus');
-        if(btns.Train) btns.Train.onclick = () => setActive('Train');
-        if(btns.Permits) btns.Permits.onclick = () => setActive('Permits');
-        if(btns.Airport) btns.Airport.onclick = () => setActive('Airport');
-        if(btns.Accidents) btns.Accidents.onclick = () => setActive('Accidents');
-        if(btns.Meetings) btns.Meetings.onclick = () => setActive('Meetings');
+        document.getElementById('tabBusBtn').onclick = () => setActive('Bus');
+        document.getElementById('tabTrainBtn').onclick = () => setActive('Train');
+        document.getElementById('tabPermitsBtn').onclick = () => setActive('Permits');
+        document.getElementById('tabAirportBtn').onclick = () => setActive('Airport');
+        document.getElementById('tabAccidentsBtn').onclick = () => setActive('Accidents');
+        document.getElementById('tabMeetingsBtn').onclick = () => setActive('Meetings');
     }
     
     mostrarFecha();
+    cargarBuses();
+    cargarTrenes();
+    cargarPermisos();
+    cargarVuelos();
+    cargarAccidentes();
+    cargarReuniones();
     initTabs();
-    actualizarVistaReuniones();
 </script>
 </body>
 </html>
